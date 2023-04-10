@@ -90,6 +90,7 @@ Part 2 of the homework involved using pcolor to visualize an error grid after sw
 2 parameters while keeping 2 parameters fixed with their optimized values. 
 
 The plots below show the results:
+
 ![Fixing A and B, Sweeping C and D](https://user-images.githubusercontent.com/80599571/230684126-8c304a8d-141b-4cc0-88ff-b1a3b6b9ac01.png)
 
 ![Fixing A and C, Sweeping B and D](https://user-images.githubusercontent.com/80599571/230684381-4dfbd71b-d9ca-4353-9b25-7ed268212134.png)
@@ -104,8 +105,47 @@ The plots below show the results:
 
 #### Part 3 Results
 Part 3 of the homework was the calculation of error for various types of curves being fit to the data.
-The given data was split up into training data and test data. 
+The given data was split up into training data and test data. There were 31 data points, so for part 3, the first twenty were treated
+as training data and the last 11 are treated as test data. Using this, I defined least square error functions for a line, parabola, and
+a 19th degree polynomial. Using the function for the least square error, I was able to print out the values for each.
+The results of these error calculations are printed below:
+
+Least Square Error for ***Line (Training Data):*** **2.242749386808538**
+
+Least Square Error for ***Line (Test Data):*** **3.36363873604787**
+
+Least Square Error for ***Parabola (Training Data):*** **2.1255393482773766**
+
+Least Square Error for ***Parabola (Test Data):*** **8.713651781874919**
+
+Least Square Error for ***19th Deg Polynomial (Training Data):*** **0.028351503968806435**
+
+Least Square Error for ***19th Deg Polynomial (Test Data):*** **28617752784.428474**
+
+The errors were all generally good enough, with the line having the best amount of error. The 19th degree polynomial 
+had very low error for the training data, but it had an insanely high error for test data. I am assuming this is due to
+overfitting occurring due to having a smaller data set to work with.
+
+#### Part 4 Results
+Part 4 of the homework was very similar to part 3, but involved changing which indices of the dataset would be used for training and test.
+The training data now captures the first 10, and the last 10 of the data set. The test data captures the middle 11. The rest of the 
+process between Part 3 and Part 4 were the same.
+The results of the error calculations are printed below:
+
+Least Square Error for ***Line (Training Data):*** **2.8684634748880655**
+
+Least Square Error for ***Line (Test Data):*** **22.197891223912386**
+
+Least Square Error for ***Parabola (Training Data):*** **2.8680459400504987**
+
+Least Square Error for ***Parabola (Test Data):*** **22.571695465713965**
+
+Least Square Error for ***19th Deg Polynomial (Training Data):*** **0.692679558738857**
+
+Least Square Error for ***19th Deg Polynomial (Test Data):*** **154987332439.0542**
+
+The 19th degree polynomial test data was similar very high as in part 3. This indicates to me a severe overfitting as a result of not having enough data points. Error increased for the line and parabola as well. 
 
 ### Sec. V. Summary and Conclusions
-In this section, we summarize the key findings and draw conclusions about the algorithm's effectiveness and potential for future research.
 
+This work has illustrated how to fit a curve to a set of points from a dataset. The least squares error method was used to effectively be able to produce a curve that could attempt fit data. We observed the visual effect of minimas by fixing two parameters and sweeping the other two. We also observed the differences between a line, parabola, and a 19 degree polynomial when trying to fit data. We observed the effects of overfitting, as the error skyrocketed and became a major outlier. Overall, the process of fitting curves to data in machine learning is an important tool that allows us to make predictions and gain insights from complex datasets. By using the least squares error method, we can effectively determine the best curve that fits the data and make accurate predictions based on this curve. However, it is important to be cautious of overfitting, as this can lead to erroneous predictions and inaccurate insights. The process of fitting curves to data is an important aspect of machine learning that should be used with care and attention to detail in order to achieve accurate and meaningful results.
