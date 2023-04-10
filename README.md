@@ -2,8 +2,7 @@
 ## By: Gerin George
 
 ### Abstract:
-In this writeup, we will be analyzing a data set and fitting it to multiple different models. We will be analyzing the error using the
-least squares error method. We will first find the minimum error and determine the parameters
+In this writeup, we will be analyzing a data set and fitting it to multiple different models using machine learning. We will be analyzing the error using the least squares error method. We will first find the minimum error and determine the parameters
 *A, B, C,* & *D* in the equation *f(x) = A cos(Bx) + Cx + D*. After this, we will explore
 the different minima that we can find if we fix two of the above parameters and sweep the other two.
 Afterwards, we will split the data into training data and test data to find the least square error
@@ -52,6 +51,10 @@ the lowest value.
 
 ### Sec. III. Algorithm Implementation and Development
 The main algorithm that was used for this homework was the least-squares error algorithm.
+
+<img width="757" alt="image" id="Error Function for Part 1" src="https://user-images.githubusercontent.com/80599571/230986011-bd063f59-b3b5-4db4-b15f-c84ea4fc5ce7.png">
+
+
 To use this algorithm, we needed to create a loss function which will return the least-squares
 error. The loss function will take in a variable "c" that represents the coefficients of our model,
 and variables 'x' and 'y' to represent the actual data. The loss functions will calculate the error
