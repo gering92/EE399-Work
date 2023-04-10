@@ -32,7 +32,6 @@ This is a common statistical technique to fit models to data. The least-squares 
 sum of the squared differences between predicted values of the model and the actual values of the data.
 Below is the Least-Squares Error equation: 
 ![Least-Squares Error](https://user-images.githubusercontent.com/80599571/230671996-23294fdf-f84c-4431-9348-834e1d268cfd.png)
-<img src="https://user-images.githubusercontent.com/80599571/230671996-23294fdf-f84c-4431-9348-834e1d268cfd.png" alt="Least-Squares Error" id="Fig 1: Least-Squares Error Equation">
 
 #### Parameter Optimization
 Parameter optimization is the process of finding parameter values that minimize the error of the model.
