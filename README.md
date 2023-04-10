@@ -30,7 +30,8 @@ we will be using to complete this assignment.
 #### Least-Squares Error
 This is a common statistical technique to fit models to data. The least-squares error is defined as the 
 sum of the squared differences between predicted values of the model and the actual values of the data.
-Below is the Least-Squares Error equation: 
+Below is the Least-Squares Error equation:
+
 ![Least-Squares Error](https://user-images.githubusercontent.com/80599571/230671996-23294fdf-f84c-4431-9348-834e1d268cfd.png)
 
 #### Parameter Optimization
