@@ -1,7 +1,18 @@
 # Homework 1 Writeup
 ## By: Gerin George
 
-### Abstract:
+Table of Contents
+=================
+
+* [Abstract](https://github.com/gering92/EE399-Work/edit/main/README.md#abstract-heading-1)
+* [Sec. I. Introduction and Overview](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-i-introduction-and-overview)
+* [Sec. II. Theoretical Background](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-ii-theoretical-background)
+* [Sec. III. Algorithm Implementation and Development](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-iii-algorithm-implementation)
+* [Sec. IV. Computational Results](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-iv-computational-results)
+* [Sec. V. Summary and Conclusion](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-v-summary-and-conclusion)
+
+
+## Abstract:
 In this writeup, we will be analyzing a data set and fitting it to multiple different models using machine learning. We will be analyzing the error using the least squares error method. We will first find the minimum error and determine the parameters
 *A, B, C,* & *D* in the equation *f(x) = A cos(Bx) + Cx + D*. After this, we will explore
 the different minima that we can find if we fix two of the above parameters and sweep the other two.
