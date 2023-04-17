@@ -1,10 +1,17 @@
+Assignment Writeup Links
+=================
+* [Homework 1 Writeup](https://github.com/gering92/EE399-Work/edit/main/README.md#homework-1-writeup)
+* [Homework 2 Writeup](https://github.com/gering92/EE399-Work/edit/main/README.md#homework-2-writeup)
+
+---
+
 # Homework 1 Writeup
 ## By: Gerin George
 
 Table of Contents
 =================
 
-* [Abstract](https://github.com/gering92/EE399-Work/edit/main/README.md#abstract-heading-1)
+* [Abstract](https://github.com/gering92/EE399-Work/edit/main/README.md#abstract)
 * [Sec. I. Introduction and Overview](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-i-introduction-and-overview)
 * [Sec. II. Theoretical Background](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-ii-theoretical-background)
 * [Sec. III. Algorithm Implementation and Development](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-iii-algorithm-implementation)
@@ -12,7 +19,7 @@ Table of Contents
 * [Sec. V. Summary and Conclusion](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-v-summary-and-conclusion)
 
 
-## Abstract:
+### Abstract:
 In this writeup, we will be analyzing a data set and fitting it to multiple different models using machine learning. We will be analyzing the error using the least squares error method. We will first find the minimum error and determine the parameters
 *A, B, C,* & *D* in the equation *f(x) = A cos(Bx) + Cx + D*. After this, we will explore
 the different minima that we can find if we fix two of the above parameters and sweep the other two.
@@ -164,3 +171,46 @@ The 19th degree polynomial test data was similar very high as in part 3. This in
 ### Sec. V. Summary and Conclusions
 
 This work has illustrated how to fit a curve to a set of points from a dataset. The least squares error method was used to effectively be able to produce a curve that could attempt fit data. We observed the visual effect of minimas by fixing two parameters and sweeping the other two. We also observed the differences between a line, parabola, and a 19 degree polynomial when trying to fit data. We observed the effects of overfitting, as the error skyrocketed and became a major outlier. Overall, the process of fitting curves to data in machine learning is an important tool that allows us to make predictions and gain insights from complex datasets. By using the least squares error method, we can effectively determine the best curve that fits the data and make accurate predictions based on this curve. However, it is important to be cautious of overfitting, as this can lead to erroneous predictions and inaccurate insights. The process of fitting curves to data is an important aspect of machine learning that should be used with care and attention to detail in order to achieve accurate and meaningful results.
+
+---
+# Homework 2 Writeup
+
+## By: Gerin George
+
+Table of Contents
+=================
+
+* [Abstract](https://github.com/gering92/EE399-Work/edit/main/README.md#abstract-1)
+* [Sec. I. Introduction and Overview](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-i-introduction-and-overview)
+* [Sec. II. Theoretical Background](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-ii-theoretical-background)
+* [Sec. III. Algorithm Implementation and Development](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-iii-algorithm-implementation)
+* [Sec. IV. Computational Results](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-iv-computational-results)
+* [Sec. V. Summary and Conclusion](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-v-summary-and-conclusion)
+
+### Abstract
+This homework assignment involves working with a dataset of 39 faces, each with approximately 65 lighting scenes. We'll be using Python and various mathematical techniques to analyze the data and gain insights into its structure.
+
+We'll start by computing a correlation matrix between the first 100 images in the dataset and plotting it using pcolor. From this matrix, we'll identify the two most highly correlated and uncorrelated images and plot their corresponding faces. We'll also repeat this process for a smaller subset of images.
+
+Next, we'll use eigenvector decomposition and SVD to identify the first six principal component directions of the dataset. We'll compare the first eigenvector with the first SVD mode and compute the norm of the difference between their absolute values. Finally, we'll also calculate the percentage of variance captured by each of the first six SVD modes and plot them.
+
+### Sec. I. Introduction and Overview
+In part A, we are asked to plot a correlation matrix of the matrix X, which contains a dataset of 39 faces with 65 lighting scenes giving us 2414 faces to analyze. We first create a 100 x 100 correlation matrix C by computing the dot products of the first 100 images in the matrix X, which has columns of individual images. We plot the correlation matrix using pcolor to see the correlation patterns.
+
+In part B, we are asked to use the correlation matrix that we made to then find the two most correlated images and the two most uncorrelated images and to plot those 4 images. We find the most correlated images using ```np.unravel_index(np.argmax(C - np.eye(C.shape[0])), C.shape)```. This code finds the maximum value index in the matrix C to find the position of the images with the most correlation. Similarly, ```np.unravel_index(np.argmin(C - np.eye(C.shape[0])), C.shape)``` is used to find the minimum value, with the only difference being that we use np.argmin instead of np.argmax. 
+
+In part C, we repeat part a but with a 10 x 10 correlation matrix instead. 
+
+In part D, we find the 6 first six eigenvectors with the largest magnitude eigenvalue. 
+
+Part E involved doing single value decomposition (SVD) on the matrix X containing all the images, and finding the six principal component directions. 
+
+Part 
+ 
+### Sec. II. Theoretical Background
+
+### Sec. III. Algorithm Implementation and Development
+
+### Sec. IV. Computational Results
+
+### Sec. V. Summary and Conclusion
