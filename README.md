@@ -227,6 +227,35 @@ results=loadmat('yalefaces.mat')
 X=results['X']
 ```
 
+#### Part A: Computing 100 x 100 correlation matrix C:
+The Python code below isolates the first 100 images, and then uses the np.dot function to calculate the dot product between X_100 and X_100<sup>T</sup>
+```
+# Compute the correlation matrix using dot product
+X_100 = X[:, :100]
+C = np.dot(X_100.T, X_100)
+```
+We then plot C using pcolor. 
+
+#### Part B: Find the two most highly correllated images and the two lowest correllated images
+
+The python code below is used to find the indices of the upper triangle of the matrix C to improve efficiency.
+```
+utri = np.triu_indices(C.shape[0], k=1)
+```
+
+The code below uses np.unravel_index to find the indices of the maximum values. 
+```
+max_idx = np.unravel_index(np.argmax(C[utri]), C.shape)
+img1 = X_100[:, max_idx[0]]
+img2 = X_100[:, max_idx[1]]
+```
+A similar method using np.argmin is used to find the indices of the minimum values. 
+
+These images are then plotted. 
+
+#### Part C: 
+
+
 ### Sec. IV. Computational Results
 
 ### Sec. V. Summary and Conclusion
