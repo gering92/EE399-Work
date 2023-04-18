@@ -197,7 +197,7 @@ Next, we'll use eigenvector decomposition and SVD to identify the first six prin
 ### Sec. I. Introduction and Overview
 In part A, we are asked to plot a correlation matrix of the matrix X, which contains a dataset of 39 faces with 65 lighting scenes giving us 2414 faces to analyze. We first create a 100 x 100 correlation matrix C by computing the dot products of the first 100 images in the matrix X, which has columns of individual images. We plot the correlation matrix using pcolor to see the correlation patterns.
 
-In part B, we are asked to use the correlation matrix that we made to then find the two most correlated images and the two most uncorrelated images and to plot those 4 images. We find the most correlated images using ```np.unravel_index(np.argmax(C - np.eye(C.shape[0])), C.shape)```. This code finds the maximum value index in the matrix C to find the position of the images with the most correlation. Similarly, ```np.unravel_index(np.argmin(C - np.eye(C.shape[0])), C.shape)``` is used to find the minimum value, with the only difference being that we use np.argmin instead of np.argmax. 
+In part B, we are asked to use the correlation matrix that we made to then find the two most correlated images and the two most uncorrelated images and to plot those 4 images. We find the most correlated images using ```np.unravel_index(np.argmax(C[utri]), C.shape)```. This code finds the maximum value index in the matrix C to find the position of the images with the most correlation. Similarly, ```np.unravel_index(np.argmin(C[utri]), C.shape)``` is used to find the minimum value, with the only difference being that we use np.argmin instead of np.argmax. 
 
 In part C, we repeat part a but with a 10 x 10 correlation matrix instead. 
 
@@ -205,11 +205,27 @@ In part D, we find the 6 first six eigenvectors with the largest magnitude eigen
 
 Part E involved doing single value decomposition (SVD) on the matrix X containing all the images, and finding the six principal component directions. 
 
-Part 
+In part F, we are comparing the first eigenvector v<sub>1</sub> that we calculated from part D with the SVD mode u<sub>2</sub> from part E. We then compute the norm of difference of their absolute values.
+
+Part G, the final part, involves computing the percentage of variance from each of the first 6 SVD modes, and plotting the first 6 SVD modes. 
  
 ### Sec. II. Theoretical Background
 
+In regards to machine learning, the correlation matrix that we created by computing the dot product between the matrix X and the transpose of the matrix X allows us to see how closely two images are related. By observing the value of their dot product, we know how similar two images can be. Using the correlation matrix, we can then find the most and least correlated images
+
+Eigenvectors are a type of vector that represent the directions in which a linear transformation preserves its shape. In image processing, eigenvectors can be used to represent the dominant patterns or features present in a set of images. Eigenvectors with the largest magnitude eigenvalues are known as principal components, and can be used to project the images into a lower dimensional space. 
+
+We are also asked to perform an SVD on the matrix X and find the first six principal component directions. Singular Value Decomposition (SVD) is a powerful technique used in linear algebra and data anlysis. It is used to decompose a matrix into its constituent parts in order to perform a range of operations such as dimensionality reduction, data comporession, and feature extraction. The key idea of SVD, is to represent a matrix as a product of three matrixes: U, &Sigma;, and V<sup>T</sup>. U and V are orthogonal matrixes, and &Sigma; is a diagonal matrix with non-negative real numbers on the diagonal. The SVD of a matrix X is expressed as: 
+A = U * &Sigma; * V<sup>T</sup>
+
+In terms of dimensionality reduction, by keeping only the most important singular values and corresponding columsn of U and V, we can reduce the dimensionality of the original matrix while still preserving most of its variance. Overall, SVD is a powerful technique with important applications in machine learning. 
+
 ### Sec. III. Algorithm Implementation and Development
+Initialization of sample data into the matrix X: 
+```
+results=loadmat('yalefaces.mat')
+X=results['X']
+```
 
 ### Sec. IV. Computational Results
 
