@@ -15,7 +15,7 @@ Table of Contents
 * [Abstract](https://github.com/gering92/EE399-Work/blob/main/README.md#abstract)
 * [Sec. I. Introduction and Overview](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-i-introduction-and-overview)
 * [Sec. II. Theoretical Background](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-ii-theoretical-background)
-* [Sec. III. Algorithm Implementation and Development](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-iii-algorithm-implementation)
+* [Sec. III. Algorithm Implementation and Development](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-iii-algorithm-implementation-and-development)
 * [Sec. IV. Computational Results](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-iv-computational-results)
 * [Sec. V. Summary and Conclusions](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-v-summary-and-conclusions)
 
