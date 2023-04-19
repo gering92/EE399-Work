@@ -227,7 +227,7 @@ results=loadmat('yalefaces.mat')
 X=results['X']
 ```
 
-#### Part A: Computing 100 x 100 correlation matrix C:
+#### Part A: Computing a 100 x 100 Correlation Matrix C:
 The Python code below isolates the first 100 images, and then uses the np.dot function to calculate the dot product between X_100 and X_100<sup>T</sup>
 ```
 # Compute the correlation matrix using dot product
@@ -253,9 +253,77 @@ A similar method using np.argmin is used to find the indices of the minimum valu
 
 These images are then plotted. 
 
-#### Part C: 
+#### Part C: Computing a 10 x 10 Correlation Matrix:
+The python code below isolates the first 100 images and uses the np.dot function to create a correlation matrix. 
+```
+C = np.dot(X[:, [1, 313, 512, 5, 2400, 113, 1024, 87, 314, 2005]].T, X[:, [1, 313, 512, 5, 2400, 113, 1024, 87, 314, 2005]])
+```
+After computing the new 10 x 10 correlation matrix, we plot it to observe the new correlation values. 
 
+#### Part D: Creating New Matrix Y and Finding the First Six Eigenvectors with the Largest Magnitude Eigenvalue 
+The code below calculates the Matrix Y, which is the dot product of X and X<sup>T</sup>. We then find the eigenvalues and eigenvectors using np.linalg.eigh(), which returns both eigenvalues and eigenvectors. 
+```
+Y = np.dot(X, X.T)
+eigenvals, eigenvecs = np.linalg.eigh(Y)
+```
+The code below is to sort the Eigenvalues in descending order so we can find the eigenvectors with the largest eigenvalue: 
+```
+idx = np.argsort(eigenvals)[::-1]
+```
+The code below is to find the first 6 eigenvectors. 
+```
+top_eigenvecs = eigenvecs[:, idx[:6]]
+```
+We then have to normalize the eigenvectors in order to ensure that they have a unit length. This makes it easier to interpret the eigenvectors and see them as directions in space that are most relevant to distinguishing facial images. 
+```
+norms = np.linalg.norm(top_eigenvecs, axis=0)
+normalized_eigenvecs = top_eigenvecs / norms
+```
+
+We then print out the 6 eigenvectors.
+
+#### Part E: Singular Value Decomposition (SVD) and Finding the First Six Principal Component Directions
+
+To perform singular value decomposition, we can use the np.linalg.svd() function, which returns the three matrices U, V, and &Sigma.
+```
+U, s, V = np.linalg.svd(X)
+```
+
+The principal component directions are the columns of V<sup>T</sup>, and we can find the first 6 using the code below.
+```
+principal_component_directions = V[:6,:].T
+```
+
+#### Part F: Comparing the First Eigenvector from Part D and the First SVD Mode from Part E and Calculating Norm of Difference of Absolute Value
+
+The code below is used to capture the first Eigenvector and the first SVD mode. 
+```
+eigenvector_1 = normalized_eigenvecs[:, 0]
+svd_mode_1 = U[:, 0]
+```
+We then find the norm of difference of their absolute values using this code: 
+```
+norm_diff = np.linalg.norm(np.abs(eigenvector_1) - np.abs(svd_mode_1))
+```
+Afterwards, we can just print out norm_diff.
+
+#### Part G: Computing Percentage of Variance from First 6 SVD Modes and Plotting the First 6 SVD Modes
+
+The code below calculates the sum of squares of the projections onto each of the six SVD modes. This is necessary to determine the variance captured by the 6 SVD modes.
+```
+ss_projections = np.sum((X.T @ U[:, :6])**2, axis=0)
+```
+We can find the total variance of the origianl data by doing a similar calculation:
+```
+total_variance = np.sum(X**2)
+```
+
+We can then find the percent of variance captured by each of the first 6 SVD modes by dividing ss_projections by total_variance. 
+```
+variance_percentages = ss_projections / total_variance * 100
+```
 
 ### Sec. IV. Computational Results
+
 
 ### Sec. V. Summary and Conclusion
