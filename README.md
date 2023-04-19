@@ -256,7 +256,7 @@ These images are then plotted.
 #### Part C: Computing a 10 x 10 Correlation Matrix:
 The python code below isolates the first 100 images and uses the np.dot function to create a correlation matrix. 
 ```
-C = np.dot(X[:, [1, 313, 512, 5, 2400, 113, 1024, 87, 314, 2005]].T, X[:, [1, 313, 512, 5, 2400, 113, 1024, 87, 314, 2005]])
+C = np.dot(X[:, [0, 312, 511, 4, 2399, 112, 1023, 86, 313, 2004]].T, X[:, [0, 312, 511, 4, 2399, 112, 1023, 86, 313, 2004]])
 ```
 After computing the new 10 x 10 correlation matrix, we plot it to observe the new correlation values. 
 
@@ -325,5 +325,64 @@ variance_percentages = ss_projections / total_variance * 100
 
 ### Sec. IV. Computational Results
 
+#### Part A: 
+The correlation matrix that was created from the code is seen below:
+<img width="480" alt="image" src="https://user-images.githubusercontent.com/80599571/232940032-13bae3f4-13ed-4a0a-955c-1b10c6c7e7ce.png">
+
+We can see a criss cross patttern in the correlation matrix. The yellow coloring means images that share high correlation, and dark blue represents low correlation. 
+
+#### Part B: 
+The two most correlated and two most uncorrelated images can be seen below: 
+<img width="480" alt="Image of most correlated and least correlated images" src="https://user-images.githubusercontent.com/80599571/232940864-50126652-7e46-4767-a5e3-7c1696da3c46.png">
+
+From here, we can see that the most uncorrelated images are the ones with a stark difference in lighting, while the most correlated images share similar lighting features. 
+
+#### Part C: 
+The result of part C is similar to part A, but with a 10 x 10 matrix instead using specific indices. The resulting correlation matrix is shown below: 
+<img width="480" alt="image" src="https://user-images.githubusercontent.com/80599571/232949278-5d4ad62c-ee94-44ee-aeb2-e62366764a16.png">
+
+#### Part D: 
+The first six eigenvectors with the largest eigvenvalues are seen in the image below:
+<img width="600" alt="image" src="https://user-images.githubusercontent.com/80599571/232943633-e26e7dff-0a54-4b50-b329-272fb0154613.png">
+
+
+#### Part E: 
+The first six principal component directions are seen in the image below:
+<img width="555" alt="image" src="https://user-images.githubusercontent.com/80599571/232947400-139be950-6b61-439b-aa91-660a4a127548.png">
+
+#### Part F:
+The calculated norm of the absolute difference between the first eigenvector and the first SVD mode is printed below: 
+```
+6.125883123259166e-16
+```
+This shows that the difference between the eigenvector and the SVD mode is very small. 
+
+#### Part G:
+The variances in the SVD Modes are printed below: 
+```
+Variances: 
+SVD Mode 1: 72.9276
+SVD Mode 2: 15.2818
+SVD Mode 3: 2.5667
+SVD Mode 4: 1.8775
+SVD Mode 5: 0.6393
+SVD Mode 6: 0.5924
+```
+
+The plots of the variance in SVD modes are in the image below:
+<img width="791" alt="image" src="https://user-images.githubusercontent.com/80599571/232948874-cdc9e95e-94e8-49dd-88ed-1b71e9bf3d94.png">
+
 
 ### Sec. V. Summary and Conclusion
+
+In this homework, we explored more about the techniques used in machine learning. This includes the use of dot products to find correlation matrices, the process of SVD and how it is useful to reduce a matrix into three matrices which captures patterns and relationships in data. It can be used to project data into a lower dimensional space while retaining much of the original structure. We also explore the importance of eigenvectors and eigenvalues in this assignment. 
+
+We first applied dot products to this assignment by computing a 100 x 100 correlation matrix of the first 100 images in the dataset. We then saw how well this correlation matrix worked by capturing the most correlated and most uncorrelated image pairs from the data. 
+
+We then began to observe how eigenvectors and SVD are related by finding the first six eigenvectors with the largest magnitude eigenvalues of the dot product of X and X<sup>T</sup>. Singular Value Decomposition was performed on the matrix X after this to find the first six principal component directions. 
+
+To observe the similar results obtained from these methods, we calculated the norm of difference of their absolute values. The value we obtained was 6.125883123259166e-16, illustrating how principal component directions and the eigenvectors with the largest magnitude eigenvalues are similar. 
+
+The last step involved finding the percentage of variance of the first 6 SVD modes. This resulted in 6 variance values, with the first SVD mode capturing the highest variance at 72.93% and the 6th SVD mode capturing the lowest variance at 0.59%. 
+
+The analysis performed in this homework on the set of images from Yalefaces helps us understand the approach that is used to find similarities in images. With correlation matrices, eigenvectors, and SVDs, we are able to find similarities in images and use machine learning to recognize faces. 
