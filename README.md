@@ -1,8 +1,8 @@
 # *Assignment Writeup Links*
 
 =================
-* [Homework 1 Writeup](https://github.com/gering92/EE399-Work/edit/main/README.md#homework-1-writeup)
-* [Homework 2 Writeup](https://github.com/gering92/EE399-Work/edit/main/README.md#homework-2-writeup)
+* [Homework 1 Writeup](https://github.com/gering92/EE399-Work/main/README.md#homework-1-writeup)
+* [Homework 2 Writeup](https://github.com/gering92/EE399-Work/main/README.md#homework-2-writeup)
 
 ---
 
