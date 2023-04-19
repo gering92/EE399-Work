@@ -12,12 +12,12 @@
 Table of Contents
 =================
 
-* [Abstract](https://github.com/gering92/EE399-Work/edit/main/README.md#abstract)
-* [Sec. I. Introduction and Overview](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-i-introduction-and-overview)
-* [Sec. II. Theoretical Background](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-ii-theoretical-background)
-* [Sec. III. Algorithm Implementation and Development](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-iii-algorithm-implementation)
-* [Sec. IV. Computational Results](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-iv-computational-results)
-* [Sec. V. Summary and Conclusions](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-v-summary-and-conclusions)
+* [Abstract](https://github.com/gering92/EE399-Work/blob/main/README.md#abstract)
+* [Sec. I. Introduction and Overview](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-i-introduction-and-overview)
+* [Sec. II. Theoretical Background](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-ii-theoretical-background)
+* [Sec. III. Algorithm Implementation and Development](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-iii-algorithm-implementation)
+* [Sec. IV. Computational Results](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-iv-computational-results)
+* [Sec. V. Summary and Conclusions](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-v-summary-and-conclusions)
 
 
 ### Abstract:
@@ -181,12 +181,12 @@ This work has illustrated how to fit a curve to a set of points from a dataset. 
 Table of Contents
 =================
 
-* [Abstract](https://github.com/gering92/EE399-Work/edit/main/README.md#abstract-1)
-* [Sec. I. Introduction and Overview](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-i-introduction-and-overview-1)
-* [Sec. II. Theoretical Background](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-ii-theoretical-background-1)
-* [Sec. III. Algorithm Implementation and Development](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-iii-algorithm-implementation-1)
-* [Sec. IV. Computational Results](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-iv-computational-results-1)
-* [Sec. V. Summary and Conclusion](https://github.com/gering92/EE399-Work/edit/main/README.md#sec-v-summary-and-conclusion)
+* [Abstract](https://github.com/gering92/EE399-Work/blob/main/README.md#abstract-1)
+* [Sec. I. Introduction and Overview](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-i-introduction-and-overview-1)
+* [Sec. II. Theoretical Background](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-ii-theoretical-background-1)
+* [Sec. III. Algorithm Implementation and Development](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-iii-algorithm-implementation-1)
+* [Sec. IV. Computational Results](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-iv-computational-results-1)
+* [Sec. V. Summary and Conclusion](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-v-summary-and-conclusion)
 
 ### Abstract
 This homework assignment involves working with a dataset of 39 faces, each with approximately 65 lighting scenes. We'll be using Python and various mathematical techniques to analyze the data and gain insights into its structure.
