@@ -328,12 +328,14 @@ variance_percentages = ss_projections / total_variance * 100
 
 #### Part A: 
 The correlation matrix that was created from the code is seen below:
+
 <img width="480" alt="image" src="https://user-images.githubusercontent.com/80599571/232940032-13bae3f4-13ed-4a0a-955c-1b10c6c7e7ce.png">
 
 We can see a criss cross patttern in the correlation matrix. The yellow coloring means images that share high correlation, and dark blue represents low correlation. 
 
 #### Part B: 
-The two most correlated and two most uncorrelated images can be seen below: 
+The two most correlated and two most uncorrelated images can be seen below:
+
 <img width="480" alt="Image of most correlated and least correlated images" src="https://user-images.githubusercontent.com/80599571/232940864-50126652-7e46-4767-a5e3-7c1696da3c46.png">
 
 From here, we can see that the most uncorrelated images are the ones with a stark difference in lighting, while the most correlated images share similar lighting features. 
