@@ -341,23 +341,28 @@ The two most correlated and two most uncorrelated images can be seen below:
 From here, we can see that the most uncorrelated images are the ones with a stark difference in lighting, while the most correlated images share similar lighting features. 
 
 #### Part C: 
-The result of part C is similar to part A, but with a 10 x 10 matrix instead using specific indices. The resulting correlation matrix is shown below: 
+The result of part C is similar to part A, but with a 10 x 10 matrix instead using specific indices. The resulting correlation matrix is shown below:
+
 <img width="480" alt="image" src="https://user-images.githubusercontent.com/80599571/232949278-5d4ad62c-ee94-44ee-aeb2-e62366764a16.png">
 
 #### Part D: 
 The first six eigenvectors with the largest eigvenvalues are seen in the image below:
+
 <img width="600" alt="image" src="https://user-images.githubusercontent.com/80599571/232943633-e26e7dff-0a54-4b50-b329-272fb0154613.png">
 
 
 #### Part E: 
 The first six principal component directions are seen in the image below:
+
 <img width="555" alt="image" src="https://user-images.githubusercontent.com/80599571/232947400-139be950-6b61-439b-aa91-660a4a127548.png">
 
 #### Part F:
 The calculated norm of the absolute difference between the first eigenvector and the first SVD mode is printed below: 
+
 ```
 6.125883123259166e-16
 ```
+
 This shows that the difference between the eigenvector and the SVD mode is very small. 
 
 #### Part G:
