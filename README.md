@@ -3,6 +3,7 @@
 =================
 * [Homework 1 Writeup](https://github.com/gering92/EE399-Work/blob/main/README.md#homework-1-writeup)
 * [Homework 2 Writeup](https://github.com/gering92/EE399-Work/blob/main/README.md#homework-2-writeup)
+* [Homework 3 Writeup](https://github.com/gering92/EE399-Work/blob/main/README.md#homework-3-writeup)
 
 ---
 
@@ -393,4 +394,19 @@ To observe the similar results obtained from these methods, we calculated the no
 
 The last step involved finding the percentage of variance of the first 6 SVD modes. This resulted in 6 variance values, with the first SVD mode capturing the highest variance at 72.93% and the 6th SVD mode capturing the lowest variance at 0.59%. 
 
-The analysis performed in this homework on the set of images from Yalefaces helps us understand the approach that is used to find similarities in images. With correlation matrices, eigenvectors, and SVDs, we are able to find similarities in images and use machine learning to recognize faces. 
+The analysis performed in this homework on the set of images from Yalefaces helps us understand the approach that is used to find similarities in images. With correlation matrices, eigenvectors, and SVDs, we are able to find similarities in images and use machine learning to recognize faces.
+
+---
+# Homework 3 Writeup
+
+## By: Gerin George
+
+Table of Contents
+=================
+
+* [Abstract](https://github.com/gering92/EE399-Work/blob/main/README.md#abstract-2)
+* [Sec. I. Introduction and Overview](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-i-introduction-and-overview-2)
+* [Sec. II. Theoretical Background](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-ii-theoretical-background-2)
+* [Sec. III. Algorithm Implementation and Development](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-iii-algorithm-implementation-and-development-2)
+* [Sec. IV. Computational Results](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-iv-computational-results-2)
+* [Sec. V. Summary and Conclusion](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-v-summary-and-conclusion-1)
