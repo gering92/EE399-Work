@@ -414,11 +414,31 @@ Table of Contents
 
 ### Abstract
 
+This homework assingment involves working with the MNIST dataset. This dataset contains handwritten numbers from 0-9. The analysis involves performing an SVD analysis of the images, projecting them onto PCA space, and building classifiers to identify individual digits. The rank of the digit space is determined by analyzing the singular value spectrum, and the interpretation of the U, Σ, and V matrices is discussed. A 3D plot is created to show the projection of the data onto three selected V-modes. Linear classifiers (LDA), SVMs, and decision tree classifiers are built to classify different pairs and groups of digits, and their performance is evaluated on both the training and test sets. The difficulty of separating different pairs of digits is also discussed. The assignment requires creating visualizations to aid in the analysis and understanding of the results.
+
 ### Sec. I. Introduction and Overview
+
+The MNIST dataset is a well-known benchmark dataset in machine learning, consisting of 70,000 grayscale images of handwritten digits from 0 to 9. In this assignment, we will perform an analysis of the MNIST dataset using singular value decomposition (SVD) and principal component analysis (PCA), as well as building classifiers to identify individual digits in the training set using linear discriminant analysis (LDA), support vector machines (SVM), and decision trees.
 
 ### Sec. II. Theoretical Background
 
+In the first part, we will reshape each image into a column vector and perform an SVD analysis to determine the singular value spectrum and the necessary number of modes for good image reconstruction. We will also interpret the U, Σ, and V matrices, and project the data onto three selected V-modes to create a 3D plot colored by digit label.
+
+In the second part, we will build classifiers to identify individual digits in the training set using LDA, SVM, and decision trees. We will first pick two digits and try to build a linear classifier that can reasonably identify/classify them, then pick three digits and build a linear classifier to identify these three. We will also identify the two digits in the dataset that are most difficult to separate and quantify the accuracy of the separation with LDA on the test data. Similarly, we will identify the two digits in the dataset that are easiest to separate and quantify the accuracy of the separation with LDA on the test data. Finally, we will compare the performance between LDA, SVM, and decision trees on the hardest and easiest pair of digits to separate.
+
+Throughout the assignment, we will use visualizations to help us better understand and interpret the data and results.
+
 ### Sec. III. Algorithm Implementation and Development
+
+Initialization of the sample MNIST data. We divide by 255.0 to normalize the data, and then transpose to make each column a different image. 
+
+```python
+# Load the MNIST data
+mnist = fetch_openml('mnist_784')
+X = np.array(mnist.data / 255.0) # Normalizes data and puts data in matrix X
+
+X = X.T
+```
 
 ### Sec. IV. Computational Results
 
