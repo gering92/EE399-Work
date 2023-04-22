@@ -440,6 +440,639 @@ X = np.array(mnist.data / 255.0) # Normalizes data and puts data in matrix X
 X = X.T
 ```
 
+#### Question 1: SVD Analysis of the Digit Images
+
+The following code performs SVD analysis and gathers the output matrices in the variables U, S, and Vt:
+```python
+# Perform SVD on the images
+U, S, Vt = np.linalg.svd(X, full_matrices=False)
+```
+
+#### Question 2: Singular Value Spectrum Plot and Rank r of Digit Space
+
+The following code will plot the S matrix, which has the singular value spectrum. 
+```python
+#Plot the singular values
+fig = plt.figure(figsize=(15, 8))  # set figure size
+plt.plot(S)
+plt.xlabel('Singular value index')
+plt.ylabel('Singular value')
+plt.xticks(range(0, len(S), 20))  # set x-ticks at intervals of 25
+plt.yticks(range(0, 2000, 100))  # set y-ticks at intervals of 100
+```
+
+We then use the following code to determine the rank r, and place it on our plot:
+```python
+# Determine the rank r
+threshold = 0.1 * S[0]
+r = np.sum(S > threshold)
+
+plt.plot(r, S[r], 'ro', label=f'Rank {r}')  # add a red dot at the rank r value and label it
+
+plt.title('MNIST Digit Images Singular Value Spectrum')
+plt.legend()
+plt.show()
+
+print('The Singular Values look like an exponential decay.')
+print('Rank of digit space:', r)
+```
+
+#### Question 3: Interpretation of the U, &Sigma;, and V Matrices:
+
+The U, &Sigma;, and V matrices represent the factorization of a matrix that undergoes singular value decomposition. 
+
+The U matrix represents the left singular vectors, and span the column space of the matrix A that undergoes SVD.
+
+The V matrix represents the right singular vectors, and span the row space of the matrix A that undergoes SVD. 
+
+The &Sigma; matrix represents the singular values, which are the square roots of the eigenvalues of the matrix A. They indicate the importance of each singular vector in the data, and are sorted in descending order along the diagonal of S. 
+
+#### Question 4: 3D Plot of Digit Data Projected onto V-Modes 2, 3, and 5
+
+The following code is used to select three modes (2, 3, and 5) from V. We then use matrix multiplication to project it. 
+
+```python
+# Project the data onto the three selected V-modes
+V_selected = Vt[:, [1, 2, 4]]
+projected_data = (X.T @ V_selected)
+```
+
+The code below extracts the digit labels into the matrix y:
+
+```python
+y = np.array(mnist.target)
+```
+
+The code below plots a 3D scatterplot. np.unique(y) is used to grab every unique value in y, which are digits 0-9. A mask is used from these unique values to create the plot. 
+
+```python
+unique_vals = np.unique(y)
+num_vals = len(unique_vals)
+print(num_vals)
+
+# Plot the scatter plot
+fig = plt.figure(figsize=(20,20))
+ax = fig.add_subplot(111, projection='3d')
+
+
+colors = ['red', 'green', 'blue', 'cyan', 'magenta', 'yellow', 'black', 'purple', 'gray', 'orange']
+for i, val in enumerate(unique_vals):
+    mask = np.where(y == val)[0]
+    ax.scatter3D(projected_data[mask, 0], projected_data[mask, 1], projected_data[mask, 2], color=colors[i], label=str(val))
+
+
+# Set the axis labels
+ax.set_xlabel('V_2')
+ax.set_ylabel('V_3')
+ax.set_zlabel('V_5')
+ax.set_title('Projection of MNIST onto V-modes 2, 3, and 5')
+
+# Add the legend
+ax.legend(loc='upper left', title='Digit Labels')
+
+plt.show()
+```
+
+#### Two Digit Linear Classification
+
+The two digits that were selcted to be used for linear classification are 3 and 8.  
+
+```python
+# Select two digits to classify (e.g., 3 and 8)
+digit1 = '3'
+digit2 = '8'
+```
+
+We use these to isolate X and y for occurences where they appear:
+
+```python
+# Use the indices to select the samples and labels
+X_selected = X[:, (y == digit1) | (y == digit2)]
+y_selected = y[(y == digit1) | (y == digit2)]
+```
+
+The data is split into training and test data by using the train_test_split function:
+```python
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X_selected.T, y_selected, test_size=0.2, random_state=42)
+```
+
+We then perform an LDA, obtain the score, and then print out the accuracy:
+
+```python
+# Perform LDA with n_components=1
+lda = LDA(n_components=1)
+lda.fit(X_train, y_train)
+
+# Get the predicted labels for the test set
+training_score = lda.score(X_train, y_train)
+
+test_score = lda.score(X_test, y_test)
+
+
+# Accuracy of training
+print("Training Accuracy: {:.3f}%".format(training_score*100))
+
+# Accuracy of Test data
+print("Test Accuracy: {:.3f}%".format(test_score*100))
+```
+
+#### Three Digit LDA:
+
+The three digit classification is very similar to the two digit classification. 
+
+Three digits are selected:
+
+```python
+digit1 = '3'
+digit2 = '8'
+digit3 = '9'
+```
+
+Then we select the right columns: 
+
+```python
+# Use the indices to select the samples and labels
+X_selected = X[:, (y == digit1) | (y == digit2) | (y == digit3)]
+y_selected = y[(y == digit1) | (y == digit2) | (y == digit3)]
+```
+
+The rest of the code involves splitting into test and training data, then performing LDA, similar to the last part.
+
+```python
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X_selected.T, y_selected, test_size=0.2, random_state=42)
+
+# Perform LDA with n_components=1
+lda = LDA(n_components=1)
+lda.fit(X_train, y_train)
+
+# Get the predicted labels for the test set
+training_score = lda.score(X_train, y_train)
+
+test_score = lda.score(X_test, y_test)
+
+
+# Accuracy of training
+print("Training Accuracy: {:.3f}%".format(training_score*100))
+
+# Accuracy of Test data
+print("Test Accuracy: {:.3f}%".format(test_score*100))
+```
+
+#### Most Difficult Digits and Easiest Digits to Separate:
+
+To determine the most difficult digits to separate, the combinations function from itertools is used. We create an array of all the digits, and then run. combinations through that to find all the digit combinations. 
+
+```python
+from itertools import combinations
+
+# Define the digits to classify
+digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+# Get all possible combinations of two digits
+digit_pairs = combinations(digits, 2)
+```
+
+We also keep track of max and min accuracies for test and training with the following block of code: 
+
+```python
+# Initialize variables to store max and min test accuracy and their corresponding digit pairs
+max_test_accuracy = 0
+max_test_accuracy_digits = None
+min_test_accuracy = 100
+min_test_accuracy_digits = None
+```
+
+The for loop below does the same LDA analysis that we did above, but with every single digit pair from the combinations function output passed in as a digit pair. We split into training and test data using train_test_split(), and then perform an LDA. We obtain the score by using lda.score, and then update the max and min accuracy variables accordingly using an if block check.
+
+```python
+for digit_pair in digit_pairs:
+    digit1, digit2 = digit_pair
+    
+    # Select the samples and labels for the current digit pair
+    X_selected = X[:, np.isin(y, [digit1, digit2])]
+    y_selected = y[np.isin(y, [digit1, digit2])]
+
+    # Split the data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(X_selected.T, y_selected, test_size=0.2, random_state=42)
+
+    # Perform LDA with n_components=1
+    lda = LDA(n_components=1)
+    lda.fit(X_train, y_train)
+
+    training_score = lda.score(X_train, y_train)
+    # Get the predicted labels for the test set
+    test_score = lda.score(X_test, y_test)
+    
+    print("Digits {} vs {}: Training Accuracy: {:.3f}%".format(digit1, digit2, training_score*100))
+
+    # Print the test accuracy for the current digit pair
+    print("Digits {} vs {}: Test Accuracy: {:.3f}%".format(digit1, digit2, test_score*100))
+    print('\n')
+    
+    # Update the max and min test accuracy and their corresponding digit pairs
+    if test_score > max_test_accuracy:
+        max_test_accuracy = test_score
+        max_test_accuracy_digits = digit_pair
+    if test_score < min_test_accuracy:
+        min_test_accuracy = test_score
+        min_test_accuracy_digits = digit_pair
+```
+
+The max and min output is printed like this:
+
+```python
+# Print the max and min test accuracy and their corresponding digit pairs
+print("Maximum Test Accuracy: {:.3f}% (Digits {} vs {})".format(max_test_accuracy*100, max_test_accuracy_digits[0], max_test_accuracy_digits[1]))
+print("Minimum Test Accuracy: {:.3f}% (Digits {} vs {})".format(min_test_accuracy*100, min_test_accuracy_digits[0], min_test_accuracy_digits[1]))
+```
+
+#### Support Vector Machine (SVM) and Decision Tree Comparison:
+
+On the full data set, we use the train_test_split() function. 
+
+```python
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+```
+
+Then, using the training data, we fit an SVM, Decision Tree, and LDA model:
+
+```python
+# Fit an SVM classifier
+svm_clf = svm.SVC()
+svm_clf.fit(X_train, y_train)
+
+# Fit a decision tree classifier
+dt_clf = DecisionTreeClassifier()
+dt_clf.fit(X_train, y_train)
+
+# Fit an LDA model
+lda = LDA(n_components=1)
+lda.fit(X_train, y_train)
+```
+
+We then use predict functions for each to make a prediction based on the training data on the test data:
+
+```python
+# Make predictions on the test set
+svm_preds = svm_clf.predict(X_test)
+dt_preds = dt_clf.predict(X_test)
+```
+
+We calculate the accuracies using the code below:
+
+```python
+# Calculate and print the accuracies
+svm_acc = accuracy_score(y_test, svm_preds)
+dt_acc = accuracy_score(y_test, dt_preds)
+lda_acc = lda.score(X_test, y_test)
+```
+
+The output is printed like this:
+
+```python
+print("SVM Accuracy: {:.3f}%".format(svm_acc*100))
+print("Decision Tree Accuracy: {:.3f}%".format(dt_acc*100))
+print("LDA Accuracy: {:.3f}%".format(lda_acc*100))
+```
+
+#### LDA, SVM and Decision Tree Comparison on Hardest and Easiest Pair of Digits
+
+An SVM, Decision Tree, and LDA model were trained using the training data for the hardest pair of digits, 3 and 5:
+
+```python
+# Select the samples and labels for the hardest digit pair (3, 5)
+X_selected = X[np.logical_or(y == '3', y == '5')]
+y_selected = y[np.logical_or(y == '3', y == '5')]
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X_selected, y_selected, test_size=0.2, random_state=42)
+```
+
+The models were fit using the following code:
+
+```python
+# Fit an SVM classifier
+svm_clf = svm.SVC()
+svm_clf.fit(X_train, y_train)
+
+# Fit a decision tree classifier
+dt_clf = DecisionTreeClassifier()
+dt_clf.fit(X_train, y_train)
+
+# Fit an LDA model
+lda = LDA(n_components=1)
+lda.fit(X_train, y_train)
+```
+
+Predictions were made, and then the accuracy was taken like this, which is similar to what was used in the previous section:
+
+```python
+# Make predictions on the test set
+svm_preds = svm_clf.predict(X_test)
+dt_preds = dt_clf.predict(X_test)
+lda_preds = lda.predict(X_test)
+
+# Calculate and print the accuracies
+svm_acc = accuracy_score(y_test, svm_preds)
+dt_acc = accuracy_score(y_test, dt_preds)
+lda_acc = lda.score(X_test, y_test)
+```
+
+A similar analysis to the above was done for the easiest digit pair, 6 and 8.
+
+```python
+# Select the samples and labels for the hardest digit pair (6, 8)
+X_selected = X[np.logical_or(y == '6', y == '8')]
+y_selected = y[np.logical_or(y == '6', y == '8')]
+```
+
+The outputs were printed like this:
+
+```python
+print("Performance on the Hardest Pair (3, 5):")
+print("SVM Accuracy: {:.3f}%".format(svm_acc*100))
+print("Decision Tree Accuracy: {:.3f}%".format(dt_acc*100))
+print("LDA Accuracy: {:.3f}%".format(lda_acc*100))
+print("\n")
+```
+
+```python
+print("Performance on the Easiest Pair (6, 7):")
+print("SVM Accuracy: {:.3f}%".format(svm_acc*100))
+print("Decision Tree Accuracy: {:.3f}%".format(dt_acc*100))
+print("LDA Accuracy: {:.3f}%".format(lda_acc*100))
+```
+
+
 ### Sec. IV. Computational Results
 
+#### Question 1:
+
+Question 1 was just to perform an SVD, so it had no results beyond the output matrices. 
+
+#### Question 2:
+
+The output plot of the singular value spectrum and the rank of the digit space is seen below:
+<img width="503" alt="image" src="https://user-images.githubusercontent.com/80599571/233768514-d944c04a-e8f4-4050-b2a2-db5ec5bb5291.png">
+
+
+#### Question 3:
+
+In the context of image analysis, the matrix U is a set of basis images that capture the main patterns in the digit images (The original images in the MNIST dataset). A column of U corresponds to a basis image. The matrix V is a set of basis coefficients that determine the contribution of each basis image to a particular digit image. Each row of V corresponds to coefficients of the basis images for a particular digit image. The singular values in the matrix S can be thought of as the importance of each basis image. The larger the singular value in S, the more important the corresponding basis image.  
+
+#### Question 4: 
+
+The 3D scatter plot below represents the digit labels projected onto V-modes 2, 3 and 5. 
+<img width="499" alt="image" src="https://user-images.githubusercontent.com/80599571/233768841-23a4e53c-efc6-4482-a563-3a7caa76f774.png">
+
+#### LDA on Two Digits:
+
+Linear Discriminant Analysis on digits 3 and 8 resulted in the following accuracies for training and test data:
+
+```
+Training Accuracy: 96.724%
+Test Accuracy: 96.528%
+```
+
+#### LDA on Three Digits:
+
+Linear Discriminant Analysis on digits 3, 8, and 9 resulted in the following accuracies for training and test data:
+
+```
+Training Accuracy: 95.723%
+Test Accuracy: 94.719%
+```
+
+#### Two Hardest and Easiest Digits to Separate:
+
+The text below represent the training and test accuracies for all combinations of digits. We then print out the max and min values for the test data to determine the hardest and easiest pair of digits to separate. 
+
+```
+Digits 0 vs 1: Training Accuracy: 99.476%
+Digits 0 vs 1: Test Accuracy: 99.526%
+
+
+Digits 0 vs 2: Training Accuracy: 98.812%
+Digits 0 vs 2: Test Accuracy: 98.633%
+
+
+Digits 0 vs 3: Training Accuracy: 99.448%
+Digits 0 vs 3: Test Accuracy: 98.825%
+
+
+Digits 0 vs 4: Training Accuracy: 99.681%
+Digits 0 vs 4: Test Accuracy: 99.381%
+
+
+Digits 0 vs 5: Training Accuracy: 98.865%
+Digits 0 vs 5: Test Accuracy: 98.487%
+
+
+Digits 0 vs 6: Training Accuracy: 99.274%
+Digits 0 vs 6: Test Accuracy: 98.621%
+
+
+Digits 0 vs 7: Training Accuracy: 99.674%
+Digits 0 vs 7: Test Accuracy: 99.401%
+
+
+Digits 0 vs 8: Training Accuracy: 98.907%
+Digits 0 vs 8: Test Accuracy: 98.689%
+
+
+Digits 0 vs 9: Training Accuracy: 99.504%
+Digits 0 vs 9: Test Accuracy: 98.738%
+
+
+Digits 1 vs 2: Training Accuracy: 98.613%
+Digits 1 vs 2: Test Accuracy: 98.151%
+
+
+Digits 1 vs 3: Training Accuracy: 99.034%
+Digits 1 vs 3: Test Accuracy: 98.169%
+
+
+Digits 1 vs 4: Training Accuracy: 99.694%
+Digits 1 vs 4: Test Accuracy: 99.422%
+
+
+Digits 1 vs 5: Training Accuracy: 99.154%
+Digits 1 vs 5: Test Accuracy: 98.802%
+
+
+Digits 1 vs 6: Training Accuracy: 99.670%
+Digits 1 vs 6: Test Accuracy: 99.085%
+
+
+Digits 1 vs 7: Training Accuracy: 99.300%
+Digits 1 vs 7: Test Accuracy: 98.978%
+
+
+Digits 1 vs 8: Training Accuracy: 97.517%
+Digits 1 vs 8: Test Accuracy: 96.226%
+
+
+Digits 1 vs 9: Training Accuracy: 99.671%
+Digits 1 vs 9: Test Accuracy: 99.259%
+
+
+Digits 2 vs 3: Training Accuracy: 97.532%
+Digits 2 vs 3: Test Accuracy: 96.781%
+
+
+Digits 2 vs 4: Training Accuracy: 98.769%
+Digits 2 vs 4: Test Accuracy: 97.901%
+
+
+Digits 2 vs 5: Training Accuracy: 98.280%
+Digits 2 vs 5: Test Accuracy: 97.182%
+
+
+Digits 2 vs 6: Training Accuracy: 98.494%
+Digits 2 vs 6: Test Accuracy: 98.234%
+
+
+Digits 2 vs 7: Training Accuracy: 98.722%
+Digits 2 vs 7: Test Accuracy: 98.355%
+
+
+Digits 2 vs 8: Training Accuracy: 97.277%
+Digits 2 vs 8: Test Accuracy: 96.634%
+
+
+Digits 2 vs 9: Training Accuracy: 98.969%
+Digits 2 vs 9: Test Accuracy: 98.566%
+
+
+Digits 3 vs 4: Training Accuracy: 99.436%
+Digits 3 vs 4: Test Accuracy: 99.105%
+
+
+Digits 3 vs 5: Training Accuracy: 96.302%
+Digits 3 vs 5: Test Accuracy: 95.020%
+
+
+Digits 3 vs 6: Training Accuracy: 99.438%
+Digits 3 vs 6: Test Accuracy: 99.001%
+
+
+Digits 3 vs 7: Training Accuracy: 98.727%
+Digits 3 vs 7: Test Accuracy: 98.268%
+
+
+Digits 3 vs 8: Training Accuracy: 96.724%
+Digits 3 vs 8: Test Accuracy: 96.528%
+
+
+Digits 3 vs 9: Training Accuracy: 98.182%
+Digits 3 vs 9: Test Accuracy: 97.447%
+
+
+Digits 4 vs 5: Training Accuracy: 99.182%
+Digits 4 vs 5: Test Accuracy: 98.744%
+
+
+Digits 4 vs 6: Training Accuracy: 99.307%
+Digits 4 vs 6: Test Accuracy: 99.015%
+
+
+Digits 4 vs 7: Training Accuracy: 98.689%
+Digits 4 vs 7: Test Accuracy: 98.407%
+
+
+Digits 4 vs 8: Training Accuracy: 99.487%
+Digits 4 vs 8: Test Accuracy: 98.718%
+
+
+Digits 4 vs 9: Training Accuracy: 97.016%
+Digits 4 vs 9: Test Accuracy: 95.865%
+
+
+Digits 5 vs 6: Training Accuracy: 97.773%
+Digits 5 vs 6: Test Accuracy: 97.650%
+
+
+Digits 5 vs 7: Training Accuracy: 99.394%
+Digits 5 vs 7: Test Accuracy: 98.971%
+
+
+Digits 5 vs 8: Training Accuracy: 96.527%
+Digits 5 vs 8: Test Accuracy: 96.347%
+
+
+Digits 5 vs 9: Training Accuracy: 98.794%
+Digits 5 vs 9: Test Accuracy: 98.493%
+
+
+Digits 6 vs 7: Training Accuracy: 99.876%
+Digits 6 vs 7: Test Accuracy: 99.612%
+
+
+Digits 6 vs 8: Training Accuracy: 98.558%
+Digits 6 vs 8: Test Accuracy: 98.577%
+
+
+Digits 6 vs 9: Training Accuracy: 99.774%
+Digits 6 vs 9: Test Accuracy: 99.494%
+
+
+Digits 7 vs 8: Training Accuracy: 99.026%
+Digits 7 vs 8: Test Accuracy: 98.725%
+
+
+Digits 7 vs 9: Training Accuracy: 96.482%
+Digits 7 vs 9: Test Accuracy: 95.405%
+
+
+Digits 8 vs 9: Training Accuracy: 98.050%
+Digits 8 vs 9: Test Accuracy: 97.461%
+
+
+Maximum Test Accuracy: 99.612% (Digits 6 vs 7)
+Minimum Test Accuracy: 95.020% (Digits 3 vs 5)
+```
+
+From the data, we see that the model had the easiest time separating digits 6 and 7. It had the hardest time distinguishing digits 3 and 5. 
+
+#### SVM and Decision Tree Accuracy for all Ten Digits
+
+The accuracies of SVM and Decision Tree classifiers for all ten digits compared to the LDA accuracy is printed below:
+
+```
+SVM Accuracy: 97.643%
+Decision Tree Accuracy: 87.114%
+LDA Accuracy: 86.771%
+```
+
+SVM was actually the most accurate, as LDA had an accuracy of 86.771% when all ten digits were introduced. 
+
+#### SVM, Decision Tree Classifier, and LDA Accuracy for Hardest and Easiest Digit Pairs
+
+On the hardest and easiest pairs of digits to separate, the models performed as printed below:
+
+```
+Performance on the Hardest Pair (3, 5):
+SVM Accuracy: 99.257%
+Decision Tree Accuracy: 96.507%
+LDA Accuracy: 95.020%
+
+
+Performance on the Easiest Pair (6, 7):
+SVM Accuracy: 100.000%
+Decision Tree Accuracy: 99.012%
+LDA Accuracy: 99.612%
+```
+
+SVM was in general the most accurate, as it got 100% on the easiest pair, (6, 7), and 99.257% on the hardest pair for LDA (3, 5). 
+
 ### Sec. V. Summary and Conclusion
+
+This homework explored Singular Value Decomposition further, and the matrices that are involved. We dug a little deeper into the linear algebra that makes this all possible. We analyzed the MNIST data set, and explored a linear discriminant analysis model on the data. We analyzed how well it was able to identify two, then three digits, and then found the hardest and easiest digits for the LDA to separate. 
+
+Afterwards, we built an SVM (Support Vector Machine) and Decision Tree Classifier model, and asked them to separate all ten digits. We compared it to the LDA. We then compared all three models performance again on the hardest and easiest pair of digits to separate. 
+
+We found that in general, the SVM was most capable of identifying digits most accurately. 
+
