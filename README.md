@@ -816,6 +816,7 @@ Question 1 was just to perform an SVD, so it had no results beyond the output ma
 #### Question 2:
 
 The output plot of the singular value spectrum and the rank of the digit space is seen below:
+
 <img width="503" alt="image" src="https://user-images.githubusercontent.com/80599571/233768514-d944c04a-e8f4-4050-b2a2-db5ec5bb5291.png">
 
 
@@ -826,6 +827,7 @@ In the context of image analysis, the matrix U is a set of basis images that cap
 #### Question 4: 
 
 The 3D scatter plot below represents the digit labels projected onto V-modes 2, 3 and 5. 
+
 <img width="499" alt="image" src="https://user-images.githubusercontent.com/80599571/233768841-23a4e53c-efc6-4482-a563-3a7caa76f774.png">
 
 #### LDA on Two Digits:
