@@ -1096,10 +1096,35 @@ We found that in general, the SVM was most capable of identifying digits most ac
 ### Abstract
 
 
+In this homework assignment, we explore the application of feedforward neural networks for fitting and analyzing datasets. We will compare the performance of these neural networks with the models developed in previous assignments (HW1 and HW3) using temperature data and the MNIST dataset. The main focus will be on implementing and evaluating a three-layer feedforward neural network.
+
+The first part of the assignment involves fitting the temperature data to a feedforward neural network and evaluating the least-square error for various training and testing splits. The performance of the neural network will be compared with the models created in HW1. In the second part, we will work with the MNIST dataset by computing the first 20 PCA modes of the digit images and building a feedforward neural network for digit classification. The neural network's performance will be compared against other classification techniques such as LSTM, SVM (support vector machines), and decision tree classifiers. 
+
 ### Sec. I. Introduction and Overview
 
+In recent years, neural networks have emerged as a powerful tool for modeling complex data structures and solving various machine learning tasks. Among the different types of neural networks, feedforward neural networks have gained popularity due to their simplicity and effectiveness. In this assignment, we aim to explore the application of feedforward neural networks in fitting datasets and comparing their performance with previously developed models.
+
+The assignment consists of two main parts. In the first part, we revisit the temperature data from homework one and fit it to a three-layer feedforward neural network. The performance of the neural network will be evaluated using the least-square error metric for different training and testing data splits. This analysis will provide insights into the neural network's ability to generalize and adapt to new data. A comparison will be made between the neural network and the models developed in HW1 to assess their relative performance.
+
+In the second part of the assignment, we shift our focus to the widely-used MNIST dataset. We begin by computing the first 20 PCA modes of the digit images, which serve as a reduced representation of the data, capturing most of the variance in the dataset. Next, we build a feedforward neural network to classify the handwritten digits and compare its performance against other popular classification techniques such as LSTM, SVM, and decision tree classifiers. This comparison will help us understand the strengths and weaknesses of different classifiers in the context of digit recognition.
 
 ### Sec. II. Theoretical Background
+
+The theoretical background behind this assignment involves a few key concepts and algorithms in the field of machine learning and neural networks. These include feedforward neural networks, backpropagation, principal component analysis (PCA), and various classification techniques.
+
+Feed Forward Neural Networks (FFNNs): FFNNs are a type of artificial neural network where the connections between nodes do not form a cycle. The information flows in one direction, from the input layer through hidden layers (if any) to the output layer. Each layer consists of nodes, also known as neurons or units, that apply an activation function to the weighted sum of their inputs. FFNNs are widely used for supervised learning tasks, such as regression and classification.
+
+Backpropagation: Backpropagation is a supervised learning algorithm used to train neural networks. It is a form of supervised learning that adjusts the weights of the network to minimize the error between the predicted output and the actual output (ground truth). This is achieved through gradient descent optimization, which computes the gradient of the error with respect to each weight and updates the weights accordingly. The process is repeated iteratively until the error converges to a minimum value.
+
+Principal Component Analysis (PCA): PCA is a dimensionality reduction technique used to transform data into a lower-dimensional space while preserving most of the variance in the dataset. PCA finds a set of orthogonal axes, known as principal components, that capture the maximum variance in the data. By projecting the original data onto these principal components, a reduced representation of the data is obtained, which can be used for various machine learning tasks, including classification and visualization.
+
+Classification Techniques: In this assignment, we compare the performance of feedforward neural networks against other popular classification techniques, such as Long Short-Term Memory (LSTM) networks, Support Vector Machines (SVM), and Decision Trees. These techniques have their own strengths and weaknesses, depending on the problem domain and the structure of the data:
+
+ - LSTM networks are a type of recurrent neural network (RNN) that can learn long-term dependencies in sequential data. They are particularly useful for tasks involving time series or natural language processing.
+
+ - SVM is a supervised learning method that aims to find the optimal hyperplane that separates the classes in the feature space. SVMs are effective in high-dimensional spaces and can handle nonlinear classification using kernel functions.
+
+ - Decision Trees are hierarchical structures that recursively split the data based on feature values, aiming to maximize the purity of the resulting subsets. They are easy to interpret and can handle both numerical and categorical features.
 
 
 ### Sec. III. Algorithm Implementation and Development
