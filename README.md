@@ -1126,8 +1126,28 @@ Classification Techniques: In this assignment, we compare the performance of fee
 
  - Decision Trees are hierarchical structures that recursively split the data based on feature values, aiming to maximize the purity of the resulting subsets. They are easy to interpret and can handle both numerical and categorical features.
 
-
 ### Sec. III. Algorithm Implementation and Development
+
+#### Question 1: FFNN on 2D Temperature Data from HW1
+
+To implement the feed forward neural network, a custom class called Net was created using the code below:
+
+```python
+class Net(nn.Module):
+    def __init__(self):
+        super(Net, self).__init__()
+        self.fc1 = nn.Linear(1, 64)
+        self.fc2 = nn.Linear(64, 32)
+        self.fc3 = nn.Linear(32, 1)
+
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        x = torch.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+```
+
+This FFNN has three layers, with the first layer having an input of 1 and an output of 64, the second having an input of 64 and an output of 32, and the third layer having an input of 32 and an output of 1. The forward method is used to apply the ReLU activation function to feed the input tensor x forward through each layer until it reaches the final output layer. 
 
 ### Sec. IV. Computational Results
 
