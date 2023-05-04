@@ -1082,3 +1082,29 @@ We found that in general, the SVM was most capable of identifying digits most ac
 ---
 # Homework 4 Writeup
 ## By: Gerin George
+
+
+
+* [Abstract](https://github.com/gering92/EE399-Work/blob/main/README.md#abstract-3)
+* [Sec. I. Introduction and Overview](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-i-introduction-and-overview-3)
+* [Sec. II. Theoretical Background](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-ii-theoretical-background-3)
+* [Sec. III. Algorithm Implementation and Development](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-iii-algorithm-implementation-and-development-3)
+* [Sec. IV. Computational Results](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-iv-computational-results-3)
+* [Sec. V. Summary and Conclusion](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-v-summary-and-conclusion-2)
+
+
+### Abstract
+
+
+### Sec. I. Introduction and Overview
+
+
+### Sec. II. Theoretical Background
+
+
+### Sec. III. Algorithm Implementation and Development
+
+### Sec. IV. Computational Results
+
+### Sec. V. Summary and Conclusion
+
