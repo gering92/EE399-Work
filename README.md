@@ -4,6 +4,7 @@
 * [Homework 1 Writeup](https://github.com/gering92/EE399-Work/blob/main/README.md#homework-1-writeup)
 * [Homework 2 Writeup](https://github.com/gering92/EE399-Work/blob/main/README.md#homework-2-writeup)
 * [Homework 3 Writeup](https://github.com/gering92/EE399-Work/blob/main/README.md#homework-3-writeup)
+* [Homework 4 Writeup](https://github.com/gering92/EE399-Work/blob/main/README.md#homework-4-writeup)
 
 ---
 
@@ -1078,3 +1079,6 @@ Afterwards, we built an SVM (Support Vector Machine) and Decision Tree Classifie
 
 We found that in general, the SVM was most capable of identifying digits most accurately. 
 
+---
+# Homework 4 Writeup
+## By: Gerin George
