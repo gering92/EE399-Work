@@ -1149,7 +1149,577 @@ class Net(nn.Module):
 
 This FFNN has three layers, with the first layer having an input of 1 and an output of 64, the second having an input of 64 and an output of 32, and the third layer having an input of 32 and an output of 1. The forward method is used to apply the ReLU activation function to feed the input tensor x forward through each layer until it reaches the final output layer. 
 
+The 2D temperature data is loaded and separated into the first training and test configuration below.
+
+```python
+X = np.arange(0, 31)
+Y = np.array([30, 35, 33, 32, 34, 37, 39, 38, 36, 36, 37, 39, 42, 45, 45, 41,
+              40, 39, 42, 44, 47, 49, 50, 49, 46, 48, 50, 53, 55, 54, 53])
+
+train_X = torch.tensor(X[:20], dtype=torch.float32).view(-1, 1)
+train_Y = torch.tensor(Y[:20], dtype=torch.float32).view(-1, 1)
+
+test_X = torch.tensor(X[20:], dtype=torch.float32).view(-1, 1)
+test_Y = torch.tensor(Y[20:], dtype=torch.float32).view(-1, 1)
+```
+
+In the first configuration, the first twenty points are taken as training, and the last ten are taken as test.
+
+We create a Net() object net, and give it the criterion of mean square error for the loss function. We also use Stochastic Gradient Descent (SGD) as the optimizer.
+
+```python
+net = Net()
+criterion = nn.MSELoss()
+optimizer = optim.SGD(net.parameters(), lr=0.001)
+```
+
+The learning rate in the code above is set to 0.001, which is the step size that is taken when updating the parameters by the optimizer. 
+
+The code below is training the FFNN on the training data over 10,000 epochs:
+
+```python
+num_epochs = 10000
+for epoch in range(num_epochs):
+    optimizer.zero_grad()
+    outputs = net(train_X)
+    loss = criterion(outputs, train_Y)
+    loss.backward()
+    optimizer.step()
+
+    if (epoch+1) % 100 == 0:
+        print('Epoch [{}/{}], Loss: {:.4f}'.format(epoch+1, num_epochs, loss.item()))
+```
+
+The code below is used to find the accuracy of the neural net on the data by feeding the predicted values and the training data to the criterion function:
+
+```python
+with torch.no_grad():
+    train_pred = net(train_X)
+    train_error = criterion(train_pred, train_Y)
+    print("Least-square error on training data: {:.4f}".format(train_error.item()))
+
+    test_pred = net(test_X)
+    test_error = criterion(test_pred, test_Y)
+    print("Least-square error on test data: {:.4f}".format(test_error.item()))
+```
+
+Similarly to the first configuration, the second configuration does practically the same thing. The only difference is in the data points we use as training and test. IN the second configuration, we use the first 10 and the last 10 as training data, and the middle 10 as test data. 
+
+```python
+train_X = torch.tensor(np.concatenate((X[:10], X[-10:])), dtype=torch.float32).view(-1, 1)
+train_Y = torch.tensor(np.concatenate((Y[:10], Y[-10:])), dtype=torch.float32).view(-1, 1)
+
+test_X = torch.tensor(X[10:20], dtype=torch.float32).view(-1, 1)
+test_Y = torch.tensor(Y[10:20], dtype=torch.float32).view(-1, 1)
+```
+
+The rest of the code works the exact same way, where we instantiate a neural net model and feed it the training data to train it, and then scoring its accuracy using the criterion function. We are also still using the MSE as the loss calculator, and are also using Stochastic Gradient Descent. 
+
+```python
+net = Net()
+optimizer = optim.SGD(net.parameters(), lr=0.001)
+
+for epoch in range(num_epochs):
+    optimizer.zero_grad()
+    outputs = net(train_X)
+    loss = criterion(outputs, train_Y)
+    loss.backward()  # Added parentheses here
+    optimizer.step()
+
+    if (epoch+1) % 100 == 0:
+        print('Epoch [{}/{}], Loss: {:.4f}'.format(epoch+1, num_epochs, loss.item()))
+
+with torch.no_grad():
+    train_pred = net(train_X)
+    train_error = criterion(train_pred, train_Y)
+    print("Least-square error on training data (first 10 and last 10): {:.4f}".format(train_error.item()))
+
+    test_pred = net(test_X)
+    test_error = criterion(test_pred, test_Y)
+    print("Least-square error on test data (10 held out middle data points): {:.4f}".format(test_error.item()))
+```
+
+#### Question 2: FFNN on MNIST Data from HW3
+
+Similarly to what we did in HW3, we are now working with the MNIST dataset and trying to fit a neural network to the data. First, we have to load the MNIST data by using the code below:
+
+```python
+# Load the MNIST data
+X, y = mnist.data / 255.0, mnist.target
+y = y.astype(np.int)
+```
+
+After this, we compute the first twenty principal component analysis modes of the digits in the MNIST dataset. 
+
+```python
+# Compute the first 20 PCA modes of the digit images
+pca = PCA(n_components=20)
+pca.fit(X)
+
+# Get the first 20 PCA modes (principal components)
+pca_modes = pca.components_
+```
+
+After this, we can build the FFNN we will be using for this modeling using a custom class. 
+
+```python
+# Define the neural network architecture
+class FFNN(nn.Module):
+    def __init__(self):
+        super(FFNN, self).__init__()
+        self.fc1 = nn.Linear(784, 128)
+        self.fc2 = nn.Linear(128, 64)
+        self.fc3 = nn.Linear(64, 10)
+
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        x = torch.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+```
+
+Using the train_test_split() function, we are able to split the data into training and test data. 
+
+```python
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+```
+
+We then convert the data into tensors using the following method:
+
+```python
+# Convert the data to numpy arrays
+X_train_np = X_train.to_numpy()
+X_test_np = X_test.to_numpy()
+
+y_train_np = y_train.to_numpy()
+y_test_np = y_test.to_numpy()
+
+# Convert the data to tensors
+X_train_torch = torch.tensor(X_train_np, dtype=torch.float32)
+y_train_torch = torch.tensor(y_train_np, dtype=torch.long)
+X_test_torch = torch.tensor(X_test_np, dtype=torch.float32)
+y_test_torch = torch.tensor(y_test_np, dtype=torch.long)
+```
+
+Due to the size of the MNSIT dataset, we create a Data Loader to make the stochastic gradient descent both faster and less computationally intense. 
+
+```python
+# Create DataLoader for the training data
+train_data = TensorDataset(X_train_torch, y_train_torch)
+train_loader = DataLoader(train_data, batch_size=64, shuffle=True)
+```
+
+We instantiate the FFNN and set up the loss function and optimizer using the code below. We still use a learning rate of 0.001:
+
+```python
+# Instantiate the neural network, set up the loss function and optimizer
+ffnn = FFNN()
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(ffnn.parameters(), lr=0.001)
+```
+
+The FFNN is trained over 10 epochs using the following code:
+
+```python
+# Train the neural network
+num_epochs = 10
+for epoch in range(num_epochs):
+    for inputs, labels in train_loader:
+        optimizer.zero_grad()
+        outputs = ffnn(inputs)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+```
+
+The FFNN's accuracy is determine using the accuracy_score() function and the code below:
+
+```python
+# Evaluate the neural network
+with torch.no_grad():
+    y_pred_ffnn = ffnn(X_test_torch).argmax(dim=1).numpy()
+    ffnn_accuracy = accuracy_score(y_test, y_pred_ffnn)
+    print("Feed-forward neural network accuracy: {:.4f}".format(ffnn_accuracy))
+```
+
+The next part of this assignment has us compare the accuracies of the FFNN to different classifing methods. 
+
+The first one we will be exploring is the LSTM, which stands for Long Short-Term Memory. The LSTM is built using the code below:
+
+```python
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+class LSTMClassifier(nn.Module):
+    def __init__(self, input_size, hidden_size, num_layers, num_classes):
+        super(LSTMClassifier, self).__init__()
+        self.hidden_size = hidden_size
+        self.num_layers = num_layers
+        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True)
+        self.fc = nn.Linear(hidden_size, num_classes)
+        
+    def forward(self, x):
+        # Initialize hidden state and cell state
+        h0 = torch.zeros(self.num_layers, x.size(0), self.hidden_size).to(device)
+        c0 = torch.zeros(self.num_layers, x.size(0), self.hidden_size).to(device)
+
+        
+        # LSTM forward pass
+        out, _ = self.lstm(x, (h0, c0))
+        
+        # Decode the hidden state of the last time step
+        out = self.fc(out[:, -1, :])
+        return out
+```
+
+The code below is used to establish different model parameters. 
+
+```python
+# LSTM model parameters
+hidden_size = 128
+num_layers = 2
+num_classes = 10
+```
+
+The hidden_size parameter is meant to represent the number of neurons in each LSTM layer. A larger hidden size value means that the model can learn more complex patterns in the data. Increasing it too much can lead to overfitting though, so it is good to make it a good balance between large and small. 
+
+The num_layers parameter is the number of layers in the LSTM model. Multiple layers can help the model learn more complex representations of the data, but adding too many layers can lead to more parameters and more chance of overfitting occurring. 
+
+num_classes parameter is the number of output classes for the classification problem. Since we have 10 digits, 0-9, we have 10 possible outputs in the context of the MNIST dataset. 
+
+The code below is used to reshape the input data for the kind of input that is expected of the LSTM model. The input size is equal to 28 since each image in the NMIST dataset is 28 x 28 pixels. The LSTM model will process one row of 28 pixels at a time. the sequence length corresponds to the number of time steps the LSTM model will process, and it matches the number of rows in each 28 x 28 pixel image. 
+
+We create new X_train_LSTM and X_test_LSTM input devices that are the reshaped version of the training data in a suitable format for the LSTM model. The shape of the variable X_train_LSTM and X_test_LSTM will be (batch_size, sequence_length, input_size).
+
+An instance of the LSTMClassifier class is created, and it moves the model to the CPU using the device variable. 
+
+```python
+# Reshaping input data for the LSTM model
+input_size = 28
+sequence_length = 28
+X_train_LSTM = X_train_torch.view(-1, sequence_length, input_size)
+X_test_LSTM = X_test_torch.view(-1, sequence_length, input_size)
+
+lstm_model = LSTMClassifier(input_size, hidden_size, num_layers, num_classes).to(device)
+```
+
+We create the loss function and the optimizer for the LSTM using the code below. The loss function that is used is the Cross Entropy Loss loss function from PyTorch. Cross Entropy loss works by measuring the difference between two probability distributions, the predicted distribution and the true distribution. 
+
+The optimizer is configured for a learning rate of 0.001 as its step size. 
+
+```python
+# Set the loss function and optimizer for LSTM
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(lstm_model.parameters(), lr=0.001)
+```
+
+The code below is used to train the LSTM model:
+
+```python
+# Train the LSTM model
+num_epochs = 10
+batch_size = 100
+
+for epoch in range(num_epochs):
+    for i in range(0, len(X_train_LSTM), batch_size):
+        inputs = X_train_LSTM[i:i + batch_size].to(device)
+        labels = y_train_torch[i:i + batch_size].to(device)
+
+        optimizer.zero_grad()
+        outputs = lstm_model(inputs)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+```
+
+10 epochs are being used for the training. 
+
+The code below is used to test the LSTM model and print out the accuracy:
+
+```python
+# Test the LSTM model
+with torch.no_grad():
+    correct = 0
+    total = 0
+    for i in range(0, len(X_test_LSTM), batch_size):
+        inputs = X_test_LSTM[i:i + batch_size].to(device)
+        labels = y_test_torch[i:i + batch_size].to(device)
+        output = lstm_model(inputs)
+        _, predicted = torch.max(output.data, 1)
+        total += labels.size(0)
+        correct += (predicted == labels).sum().item()
+
+    print(f'LSTM Accuracy: {correct / total}')
+```
+
+We then compare how SVM and Decision Trees handle the same MNIST dataset by training them on the dataset and printing the accuracies. 
+
+The code below is used to fit an SVM model to the data and find its accuracy:
+
+```python
+# SVM fit and test   
+svm = SVC(kernel='rbf', random_state=42)
+svm.fit(X_train, y_train)
+y_pred_svm = svm.predict(X_test)
+
+svm_accuracy = accuracy_score(y_test, y_pred_svm)
+print("SVM accuracy: {:.4f}".format(svm_accuracy))
+```
+
+The code below is used to fit a decision tree to the data and find its accuracy:
+
+```python
+# Decision tree fit and test
+dt = DecisionTreeClassifier(random_state=42)
+dt.fit(X_train, y_train)
+y_pred_dt = dt.predict(X_test)
+
+dt_accuracy = accuracy_score(y_test, y_pred_dt)
+print("Decision tree accuracy: {:.4f}".format(dt_accuracy))
+```
+
 ### Sec. IV. Computational Results
 
+#### Question 1: 2D Temperature Data
+
+In the first question, we are seeing how the FFNN model handles the 2D temperature data from the first homework assignment. The output below is the results of the FFNN on the first configuration, where the first 20 points are taken as training data and the last 10 are taken as test data.
+
+```
+Epoch [100/10000], Loss: 81.0442
+Epoch [200/10000], Loss: 22.3072
+Epoch [300/10000], Loss: 65.6368
+Epoch [400/10000], Loss: 27.9052
+Epoch [500/10000], Loss: 14.5961
+Epoch [600/10000], Loss: 9.4846
+Epoch [700/10000], Loss: 7.2426
+Epoch [800/10000], Loss: 6.0671
+Epoch [900/10000], Loss: 5.3451
+Epoch [1000/10000], Loss: 4.8606
+Epoch [1100/10000], Loss: 4.5989
+Epoch [1200/10000], Loss: 4.4452
+Epoch [1300/10000], Loss: 4.3482
+Epoch [1400/10000], Loss: 4.2930
+Epoch [1500/10000], Loss: 4.2551
+Epoch [1600/10000], Loss: 4.2248
+Epoch [1700/10000], Loss: 4.1965
+Epoch [1800/10000], Loss: 4.1705
+Epoch [1900/10000], Loss: 4.1459
+Epoch [2000/10000], Loss: 4.1227
+Epoch [2100/10000], Loss: 4.1013
+Epoch [2200/10000], Loss: 4.0815
+Epoch [2300/10000], Loss: 4.0633
+Epoch [2400/10000], Loss: 4.0465
+Epoch [2500/10000], Loss: 4.0311
+Epoch [2600/10000], Loss: 4.0172
+Epoch [2700/10000], Loss: 4.0044
+Epoch [2800/10000], Loss: 3.9923
+Epoch [2900/10000], Loss: 3.9808
+Epoch [3000/10000], Loss: 3.9699
+Epoch [3100/10000], Loss: 3.9595
+Epoch [3200/10000], Loss: 3.9496
+Epoch [3300/10000], Loss: 3.9403
+Epoch [3400/10000], Loss: 3.9314
+Epoch [3500/10000], Loss: 3.9231
+Epoch [3600/10000], Loss: 3.9152
+Epoch [3700/10000], Loss: 3.9078
+Epoch [3800/10000], Loss: 3.9008
+Epoch [3900/10000], Loss: 3.8942
+Epoch [4000/10000], Loss: 3.8881
+Epoch [4100/10000], Loss: 3.8823
+Epoch [4200/10000], Loss: 3.8770
+Epoch [4300/10000], Loss: 3.8719
+Epoch [4400/10000], Loss: 3.8673
+Epoch [4500/10000], Loss: 3.8629
+Epoch [4600/10000], Loss: 3.8589
+Epoch [4700/10000], Loss: 3.8552
+Epoch [4800/10000], Loss: 3.8518
+Epoch [4900/10000], Loss: 3.8489
+Epoch [5000/10000], Loss: 3.8478
+Epoch [5100/10000], Loss: 3.8664
+Epoch [5200/10000], Loss: 4.0083
+Epoch [5300/10000], Loss: 3.9868
+Epoch [5400/10000], Loss: 3.9253
+Epoch [5500/10000], Loss: 3.9217
+Epoch [5600/10000], Loss: 3.9328
+Epoch [5700/10000], Loss: 3.9333
+Epoch [5800/10000], Loss: 3.9245
+Epoch [5900/10000], Loss: 3.9194
+Epoch [6000/10000], Loss: 3.9160
+Epoch [6100/10000], Loss: 3.9124
+Epoch [6200/10000], Loss: 3.9085
+Epoch [6300/10000], Loss: 3.9050
+Epoch [6400/10000], Loss: 3.9008
+Epoch [6500/10000], Loss: 3.8974
+Epoch [6600/10000], Loss: 3.8944
+Epoch [6700/10000], Loss: 3.8910
+Epoch [6800/10000], Loss: 3.8874
+Epoch [6900/10000], Loss: 3.8837
+Epoch [7000/10000], Loss: 3.8811
+Epoch [7100/10000], Loss: 3.8779
+Epoch [7200/10000], Loss: 3.8748
+Epoch [7300/10000], Loss: 3.8731
+Epoch [7400/10000], Loss: 3.8705
+Epoch [7500/10000], Loss: 3.8680
+Epoch [7600/10000], Loss: 3.8656
+Epoch [7700/10000], Loss: 3.8635
+Epoch [7800/10000], Loss: 3.8605
+Epoch [7900/10000], Loss: 3.8586
+Epoch [8000/10000], Loss: 3.8568
+Epoch [8100/10000], Loss: 3.8552
+Epoch [8200/10000], Loss: 3.8539
+Epoch [8300/10000], Loss: 3.8524
+Epoch [8400/10000], Loss: 3.8506
+Epoch [8500/10000], Loss: 3.8492
+Epoch [8600/10000], Loss: 3.8468
+Epoch [8700/10000], Loss: 3.8456
+Epoch [8800/10000], Loss: 3.8450
+Epoch [8900/10000], Loss: 3.8436
+Epoch [9000/10000], Loss: 3.8435
+Epoch [9100/10000], Loss: 3.8419
+Epoch [9200/10000], Loss: 3.8410
+Epoch [9300/10000], Loss: 3.8403
+Epoch [9400/10000], Loss: 3.8391
+Epoch [9500/10000], Loss: 3.8385
+Epoch [9600/10000], Loss: 3.8374
+Epoch [9700/10000], Loss: 3.8356
+Epoch [9800/10000], Loss: 3.8359
+Epoch [9900/10000], Loss: 3.8344
+Epoch [10000/10000], Loss: 3.8349
+Least-square error on training data: 3.8342
+Least-square error on test data: 20.5051
+```
+
+We see from the output that the loss started out relatively high, but settled around 3.8 after enough Epochs had passed. The LSE on the training data was much lower than on the test data, which indicates some overfitting had occurred. 
+
+The output of the second configuration is shown below:
+
+```
+Epoch [100/10000], Loss: 1338.1541
+Epoch [200/10000], Loss: 61.1255
+Epoch [300/10000], Loss: 57.7992
+Epoch [400/10000], Loss: 56.6340
+Epoch [500/10000], Loss: 56.9259
+Epoch [600/10000], Loss: 56.4704
+Epoch [700/10000], Loss: 56.4068
+Epoch [800/10000], Loss: 56.3196
+Epoch [900/10000], Loss: 55.5626
+Epoch [1000/10000], Loss: 56.4000
+Epoch [1100/10000], Loss: 56.4000
+Epoch [1200/10000], Loss: 56.4000
+Epoch [1300/10000], Loss: 56.4000
+Epoch [1400/10000], Loss: 56.4000
+Epoch [1500/10000], Loss: 56.4000
+Epoch [1600/10000], Loss: 56.4000
+Epoch [1700/10000], Loss: 56.4000
+Epoch [1800/10000], Loss: 56.4000
+Epoch [1900/10000], Loss: 56.4000
+Epoch [2000/10000], Loss: 56.4000
+Epoch [2100/10000], Loss: 56.4000
+Epoch [2200/10000], Loss: 56.4000
+Epoch [2300/10000], Loss: 56.4000
+Epoch [2400/10000], Loss: 56.4000
+Epoch [2500/10000], Loss: 56.4000
+Epoch [2600/10000], Loss: 56.4000
+Epoch [2700/10000], Loss: 56.4000
+Epoch [2800/10000], Loss: 56.4000
+Epoch [2900/10000], Loss: 56.4000
+Epoch [3000/10000], Loss: 56.4000
+Epoch [3100/10000], Loss: 56.4000
+Epoch [3200/10000], Loss: 56.4000
+Epoch [3300/10000], Loss: 56.4000
+Epoch [3400/10000], Loss: 56.4000
+Epoch [3500/10000], Loss: 56.4000
+Epoch [3600/10000], Loss: 56.4000
+Epoch [3700/10000], Loss: 56.4000
+Epoch [3800/10000], Loss: 56.4000
+Epoch [3900/10000], Loss: 56.4000
+Epoch [4000/10000], Loss: 56.4000
+Epoch [4100/10000], Loss: 56.4000
+Epoch [4200/10000], Loss: 56.4000
+Epoch [4300/10000], Loss: 56.4000
+Epoch [4400/10000], Loss: 56.4000
+Epoch [4500/10000], Loss: 56.4000
+Epoch [4600/10000], Loss: 56.4000
+Epoch [4700/10000], Loss: 56.4000
+Epoch [4800/10000], Loss: 56.4000
+Epoch [4900/10000], Loss: 56.4000
+Epoch [5000/10000], Loss: 56.4000
+Epoch [5100/10000], Loss: 56.4000
+Epoch [5200/10000], Loss: 56.4000
+Epoch [5300/10000], Loss: 56.4000
+Epoch [5400/10000], Loss: 56.4000
+Epoch [5500/10000], Loss: 56.4000
+Epoch [5600/10000], Loss: 56.4000
+Epoch [5700/10000], Loss: 56.4000
+Epoch [5800/10000], Loss: 56.4000
+Epoch [5900/10000], Loss: 56.4000
+Epoch [6000/10000], Loss: 56.4000
+Epoch [6100/10000], Loss: 56.4000
+Epoch [6200/10000], Loss: 56.4000
+Epoch [6300/10000], Loss: 56.4000
+Epoch [6400/10000], Loss: 56.4000
+Epoch [6500/10000], Loss: 56.4000
+Epoch [6600/10000], Loss: 56.4000
+Epoch [6700/10000], Loss: 56.4000
+Epoch [6800/10000], Loss: 56.4000
+Epoch [6900/10000], Loss: 56.4000
+Epoch [7000/10000], Loss: 56.4000
+Epoch [7100/10000], Loss: 56.4000
+Epoch [7200/10000], Loss: 56.4000
+Epoch [7300/10000], Loss: 56.4000
+Epoch [7400/10000], Loss: 56.4000
+Epoch [7500/10000], Loss: 56.4000
+Epoch [7600/10000], Loss: 56.4000
+Epoch [7700/10000], Loss: 56.4000
+Epoch [7800/10000], Loss: 56.4000
+Epoch [7900/10000], Loss: 56.4000
+Epoch [8000/10000], Loss: 56.4000
+Epoch [8100/10000], Loss: 56.4000
+Epoch [8200/10000], Loss: 56.4000
+Epoch [8300/10000], Loss: 56.4000
+Epoch [8400/10000], Loss: 56.4000
+Epoch [8500/10000], Loss: 56.4000
+Epoch [8600/10000], Loss: 56.4000
+Epoch [8700/10000], Loss: 56.4000
+Epoch [8800/10000], Loss: 56.4000
+Epoch [8900/10000], Loss: 56.4000
+Epoch [9000/10000], Loss: 56.4000
+Epoch [9100/10000], Loss: 56.4000
+Epoch [9200/10000], Loss: 56.4000
+Epoch [9300/10000], Loss: 56.4000
+Epoch [9400/10000], Loss: 56.4000
+Epoch [9500/10000], Loss: 56.4000
+Epoch [9600/10000], Loss: 56.4000
+Epoch [9700/10000], Loss: 56.4000
+Epoch [9800/10000], Loss: 56.4000
+Epoch [9900/10000], Loss: 56.4000
+Epoch [10000/10000], Loss: 56.4000
+Least-square error on training data (first 10 and last 10): 56.4000
+Least-square error on test data (10 held out middle data points): 13.4000
+```
+
+There was much higher error on the training data than on the test data, which indicates that the training data was not a good sample of the overall data pattern. 
+
+#### Question 2: MNIST Data
+
+Question 2 is regarding neural network performance vs classifiers on the MNIST dataset. 
+
+Below, we can see the accuracy of both the neural networks and the classifiers we are working with. 
+
+```
+Feed-forward neural network accuracy: 0.9733
+LSTM Accuracy: 0.9862857142857143
+SVM accuracy: 0.9764
+Decision tree accuracy: 0.8696
+```
+
+Overall, we can see that LSTM has the greatest accuracy, FFNN and SVM have similar accuracies, and the decision tree has a markedly worse accuracy by around 10%. 
+
 ### Sec. V. Summary and Conclusion
+
+In this homework, we explored the strengths and weaknesses of neural networks. 
+
+It was found that FFNNs have a weak ability to classify data that is split like the second classification of data that splits up training data into the first 10 and last 10. Overall, the neural network performed worse than simple models like a line or a parabola for the 2D temperature data. 
+
+When we fit the neural network to the MNIST data, we find that the model is extremely accurate. It gets around 97% accurate, which is comparable to the SVM accuracy. We found that LSTM (Long Short-Term Memory) has the highest accuracy rating however, with around 98.6% accuracy. The worst, by far, was the decision tree. 
+
+Overall, we see that the FFNN performed better with more multi-dimensional data like the MNIST dataset. It most likely ends up overfitting, explaining why the training accuracy was so much better than the test accuracy for the first configuration of the temperature data. When we broke up the training data so much by splitting the training into the first 10 and the last 10 for the second configuration, we found that this kind of split causes the training accuracy to go down significantly, and the test accuracy to actually become better than the training accuracy. The FFNN worked much better when we gave it higher dimensional data like the MNIST dataset with 10 possible outputs with the 10 possible digits 0-9. 
 
