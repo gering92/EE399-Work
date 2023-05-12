@@ -5,7 +5,7 @@
 * [Homework 2 Writeup](https://github.com/gering92/EE399-Work/blob/main/README.md#homework-2-writeup)
 * [Homework 3 Writeup](https://github.com/gering92/EE399-Work/blob/main/README.md#homework-3-writeup)
 * [Homework 4 Writeup](https://github.com/gering92/EE399-Work/blob/main/README.md#homework-4-writeup)
-
+* [Homework 5 Writeup](https://github.com/gering92/EE399-Work/blob/main/README.md#homework-5-writeup)
 ---
 
 # Homework 1 Writeup
@@ -1723,3 +1723,16 @@ When we fit the neural network to the MNIST data, we find that the model is extr
 
 Overall, we see that the FFNN performed better with more multi-dimensional data like the MNIST dataset. It most likely ends up overfitting, explaining why the training accuracy was so much better than the test accuracy for the first configuration of the temperature data. When we broke up the training data so much by splitting the training into the first 10 and the last 10 for the second configuration, we found that this kind of split causes the training accuracy to go down significantly, and the test accuracy to actually become better than the training accuracy. The FFNN worked much better when we gave it higher dimensional data like the MNIST dataset with 10 possible outputs with the 10 possible digits 0-9. 
 
+
+---
+# Homework 5 Writeup
+## By: Gerin George
+
+
+
+* [Abstract](https://github.com/gering92/EE399-Work/blob/main/README.md#abstract-4)
+* [Sec. I. Introduction and Overview](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-i-introduction-and-overview-4)
+* [Sec. II. Theoretical Background](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-ii-theoretical-background-4)
+* [Sec. III. Algorithm Implementation and Development](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-iii-algorithm-implementation-and-development-4)
+* [Sec. IV. Computational Results](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-iv-computational-results-4)
+* [Sec. V. Summary and Conclusion](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-v-summary-and-conclusion-3)
