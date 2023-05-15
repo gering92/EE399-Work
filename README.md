@@ -1769,6 +1769,16 @@ $\frac{{dy}}{{dt}} = x(\rho - z) - y$
 
 $\frac{{dz}}{{dt}} = xy - \beta z$
 
+The variables x, y, and z make up the system state, t is the time, $\sigma$ (sigma), $\rho$ (rho), and $\beta$ (beta) are system parameters. For certain values of $\sigma$, $\rho$, and $\beta$, the Lorenz system exhibits chaotic behavior, meaning it is deterministic, but it shows a sensitive dependence on initial conditions. This is commonly referred to as the butterfly effect. This means that even a tiny change in the starting point can lead to vastly different outcomes, making long-term preidiction impossible. In this assignment, we are training neural networks to predict system states given three different $\rho$ values, then asking it to predict system states for two different $\rho$ values. We will naturally expect them to do quite poorly at this, but we are interested in seeing which NN performs best, and which NN performs worst. 
+
+Now to get into the different neural network architectures that we will be working with in this homework assignment:
+
+Feed Forward Neural Networks (FFNN):
+Feed Forward Neural Networks are the foundation of deep learning. They consist of an input layer, one or more hidden layers, and an output layer. In FNNs, information flows in a unidirectional manner, from the input layer, through the hidden layers, to the output layer. Each layer is composed of interconnected nodes, called neurons, which apply a nonlinear activation function (ReLU) to the weighted sum of their inputs. FFNNs are typically used for tasks such as classification and regression. We should not expect FFNNs to be very good at predicting system states, because they do not have an explicit mechanism to handle sequential data. They can approximate the behavior to some extent, but they may not capture the chaotic dynamics and long-term dependencies.
+
+Recurrent Neural Networks (RNN): 
+RNNs are a class of neural networks specifica
+
 ### Sec. III. Algorithm Implementation and Development
 
 ### Sec. IV. Computational Results
