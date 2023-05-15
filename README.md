@@ -1763,11 +1763,11 @@ By the end of this assignment, we aim to gain insights into the applicability an
 
 There are several key concepts we must discuss to get the full scope of this assignment. The main one that we should discuss is the theory behind the Lorenz equations. The Lorenz equations are a set of three nonlinear differential equations that describe the deterministic behavior of a simple model for atmospheric convection. The set of equations are as follows:
 
-\[\frac{{dx}}{{dt}} = \sigma(y - x)\]
+$\[\frac{{dx}}{{dt}} = \sigma(y - x)\]$
 
-\[\frac{{dy}}{{dt}} = x(\rho - z) - y\]
+$\[\frac{{dy}}{{dt}} = x(\rho - z) - y\]$
 
-\[\frac{{dz}}{{dt}} = xy - \beta z\]
+$\[\frac{{dz}}{{dt}} = xy - \beta z\]$
 
 ### Sec. III. Algorithm Implementation and Development
 
