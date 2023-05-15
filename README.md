@@ -1774,12 +1774,40 @@ The variables x, y, and z make up the system state, t is the time, $\sigma$ (sig
 Now to get into the different neural network architectures that we will be working with in this homework assignment:
 
 Feed Forward Neural Networks (FFNN):
-Feed Forward Neural Networks are the foundation of deep learning. They consist of an input layer, one or more hidden layers, and an output layer. In FNNs, information flows in a unidirectional manner, from the input layer, through the hidden layers, to the output layer. Each layer is composed of interconnected nodes, called neurons, which apply a nonlinear activation function (ReLU) to the weighted sum of their inputs. FFNNs are typically used for tasks such as classification and regression. We should not expect FFNNs to be very good at predicting system states, because they do not have an explicit mechanism to handle sequential data. They can approximate the behavior to some extent, but they may not capture the chaotic dynamics and long-term dependencies.
+Feed Forward Neural Networks are the foundation of deep learning. They consist of an input layer, one or more hidden layers, and an output layer. In FNNs, information flows in a unidirectional manner, from the input layer, through the hidden layers, to the output layer. Each layer is composed of interconnected nodes, called neurons, which apply a nonlinear activation function (ReLU) to the weighted sum of their inputs. FFNNs are typically used for tasks such as classification and regression. We should not expect FFNNs to be very good at predicting system states, because they do not have an explicit mechanism to handle sequential data. They can approximate the behavior to some extent, but they may not capture the chaotic dynamics and long-term dependencies of the Lorenz system as effectively as other models that are able to handle sequential data. 
 
 Recurrent Neural Networks (RNN): 
-RNNs are a class of neural networks specifica
+RNNs are a class of neural networks specifically designed for sequential data processing. RNNs have feedback connections, which allow information to be passed from previous time steps to the current time step. This enables them to model temporal dependencies in data. RNNs maintain an internal hidden state that is updated at each time step and serves as a memory of past information. They can process inputs of variable lengths, and are widely used in tasks such as natural language processing, speech recognition, and sequence generation. RNNs are expected to fare better than FFNNs at predicting the states of the Lorenz equations due to being capable of capturing sequential dependencies. 
+
+Long Short Term Memory (LSTM):
+Long Short-Term Memory is a type of RNN architecture that is designed to overcome the vanishing gradient problem and capture long-term dependences in sequential data. LSTMs have a more complex structure when compared to RNNs, incorporating memory cells, input gates, forget gates, and output gates. LSTMs are therefore able to selectively retain or forget information over multiple time steps, making them effective in tasks involving sequential data such as this. LSTMs have the potential to capture the chaotic Lorenz equation system's dynamics and predict its states accurately. 
+
+Echo State Networks (ESN):
+Echo State Networks are also a type of recurrent neural network with a unique architecture that emphasizes the role of the reservoir, a fixed random network of recurrently connected neurons. ESNs are trained by adjusting only the readout layer weights, while keeping the reservoir weights fixed. The reservoir acts as a dynamic memory, transforming input signals into high-dimensional representations. ESNs are particularly efficient for processing time-varying inputs. The inherent reservoir structure of ESNs allow them to capture the complex behavior of the Lorenz equations systems. ESNs are particularly suitable for chaotic and nonlinear systems. We shoudl expect ESNs to be good at predicting the Lorenz system's dynamics well. 
 
 ### Sec. III. Algorithm Implementation and Development
+
+#### Question 1: FFNN Trained to Predict Lorenz System States
+
+To implement the FFNN, a custom class was created using the code below:
+
+```python
+# Define the model
+class FFNNModel(nn.Module):
+    def __init__(self):
+        super(FFNNModel, self).__init__()
+        self.fc1 = nn.Linear(3, 64)
+        self.fc2 = nn.Linear(64, 64)
+        self.fc3 = nn.Linear(64, 3)
+
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        x = torch.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+```
+
+To train and test the FFNN, a custom function was used called train_and_test_model. This function takes in the $\rho$
 
 ### Sec. IV. Computational Results
 
