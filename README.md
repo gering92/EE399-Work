@@ -1736,3 +1736,43 @@ Overall, we see that the FFNN performed better with more multi-dimensional data 
 * [Sec. III. Algorithm Implementation and Development](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-iii-algorithm-implementation-and-development-4)
 * [Sec. IV. Computational Results](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-iv-computational-results-4)
 * [Sec. V. Summary and Conclusion](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-v-summary-and-conclusion-3)
+
+
+
+### Abstract
+
+In this homework assignment, we are exploring neural networks capability to predict future states in the Lorenz equations, a system of differential equations that exhibit chaotic behavior under certain conditions. More specifically, we are training these models to advance the solution from time t to t + ∆t, using ρ values of 10, 28, and 40. The trained models were subsequently tested for their predictive performance at ρ values of 17 and 35.
+
+The specific neural network architectures we are using in this homework assignment are Feed-Forward Neural Networks (FFNN), Long Short-Term Memory networks (LSTM), Recurrent Neural Networks (RNN), and Echo State Networks (ESN).
+
+Our objective in this assignment is to determine which of these neural networks was best suited for predicting the complex, chaotic behavior of the Lorenz equations.
+
+### Sec. I. Introduction and Overview
+
+Neural networks are a powerful tool for modeling complex data structures and solving an expansive array of tasks. From image recognition to natural language processing, these models are able to make predictions. The underlying strength of neural networks is their ability to capture non-linear relationships in data, making them particularly suitable for modeling complex systems.
+
+In this assignment, we ask neural networks to predict the future states of a system based on their training. The system in question is governed by the Lorenz equations, a set of differential equations which exhibit chaotic behavior under certain conditions. The Lorenz system is simple, but it is capable of generating complex and seemingly random patterns that have made it a canonical example of chaotic behavior in deterministic systems. 
+
+The assignment is divided into two main parts. In the first part, we train a Feed Forward Neural Network to advance the solution of the Lorenz equations from time t to t + ∆t using ρ values of 10, 28, and 40. This training phase enables the network to learn the underlying dynamics of the system for these specific parameters. Subsequently, we test the network's ability to predict future states of the system at ρ values of 17 and 35, which were not included in the training phase. This allows us to evaluate the generalizability of the model.
+
+In the second part of the assignment, we expand our exploration to include different types of neural network architectures, namely Feed-Forward Neural Networks (FFNNs), Long Short-Term Memory networks (LSTMs), Recurrent Neural Networks (RNNs), and Echo State Networks (ESNs). Each of these architectures brings unique strengths to handling sequential data, and the goal is to investigate their performance in forecasting the dynamics of the Lorenz system.
+
+By the end of this assignment, we aim to gain insights into the applicability and effectiveness of different neural network architectures in predicting the behavior of complex dynamical systems. This could potentially provide valuable guidance for future research and applications involving time series forecasting in non-linear dynamical systems.
+
+### Sec. II. Theoretical Background
+
+There are several key concepts we must discuss to get the full scope of this assignment. The main one that we should discuss is the theory behind the Lorenz equations. The Lorenz equations are a set of three nonlinear differential equations that describe the deterministic behavior of a simple model for atmospheric convection. The set of equations are as follows:
+
+\[\frac{{dx}}{{dt}} = \sigma(y - x)\]
+
+\[\frac{{dy}}{{dt}} = x(\rho - z) - y\]
+
+\[\frac{{dz}}{{dt}} = xy - \beta z\]
+
+### Sec. III. Algorithm Implementation and Development
+
+### Sec. IV. Computational Results
+
+### Sec. V. Summary and Conclusion
+
+
