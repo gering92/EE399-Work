@@ -1807,10 +1807,460 @@ class FFNNModel(nn.Module):
         return x
 ```
 
-To train and test the FFNN, a custom function was used called train_and_test_model. This function takes in the $\rho$
+To train and test the FFNN, a custom function was used called train_and_test_model. This function takes in the $\rho$ training values (10, 28, and 40), and the $\rho$ test values (17 and 35). Inside this function, we call a generate_lorenz_data function to actually create the data values to train the model on. We then in the same train_and_test_model function test the model. We use MSE to calculate the loss.
+
+Below is the code for the train_and_test_model function: 
+
+```python
+def train_and_test_model(rho_train_values, rho_test_values):
+    print("Generating training data...")
+    # Generate training data
+    nn_input = []
+    nn_output = []
+    for rho in rho_train_values:
+        temp_input, temp_output = generate_lorenz_data(rho)
+        nn_input.append(temp_input)
+        nn_output.append(temp_output)
+    nn_input = np.vstack(nn_input)
+    nn_output = np.vstack(nn_output)
+    print("Training data generated.")
+    
+    # Convert numpy arrays to PyTorch tensors
+    nn_input = torch.from_numpy(nn_input).float()
+    nn_output = torch.from_numpy(nn_output).float()
+
+    # Create model instance
+    model = FFNNModel()
+
+    # Define loss function and optimizer
+    criterion = nn.MSELoss()
+    optimizer = optim.Adam(model.parameters(), lr=0.0008)
+
+    print("Training model...")
+    # Train the model
+    num_epochs = 100
+    for epoch in range(num_epochs):
+        optimizer.zero_grad()
+        outputs = model(nn_input)
+        loss = criterion(outputs, nn_output)
+        loss.backward()
+        optimizer.step()
+        if (epoch + 1) % 10 == 0:
+            print(f"Epoch {epoch + 1}, loss = {loss.item():.6f}")
+    print("Model training complete.")
+    
+    print("Testing model...")
+    # Test the model
+    for rho in rho_test_values:
+        test_input, test_output = generate_lorenz_data(rho)
+        test_input = torch.from_numpy(test_input).float()
+        test_output = torch.from_numpy(test_output).float()
+
+        model.eval()
+        with torch.no_grad():
+            future_state_predictions = []
+            current_state = test_input[0:1]
+            for _ in range(len(test_input) - 1):
+                next_state_prediction = model(current_state)
+                future_state_predictions.append(next_state_prediction)
+                current_state = next_state_prediction
+
+            future_state_predictions = torch.vstack(future_state_predictions)
+        mse_loss = criterion(future_state_predictions, test_output[:-1]).item()
+        print(f"Test MSE loss for rho = {rho}: {mse_loss:.6f}")
+    print("Model testing complete.")
+```
+
+A seperate function is also used to generate the data from the lorenz equation given a specific $\rho$ value:
+
+```python
+def generate_lorenz_data(rho):
+    print(f"Generating Lorenz data for rho = {rho}")
+    dt = 0.01
+    T = 8
+    t = np.arange(0, T + dt, dt)
+    beta = 8 / 3
+    sigma = 10
+
+    def lorenz_deriv(x_y_z, t0, sigma=sigma, beta=beta, rho=rho):
+        x, y, z = x_y_z
+        return [sigma * (y - x), x * (rho - z) - y, x * y - beta * z]
+
+    np.random.seed(123)
+    x0 = -15 + 30 * np.random.random((100, 3))
+
+    x_t = np.asarray([integrate.odeint(lorenz_deriv, x0_j, t) for x0_j in x0])
+
+    nn_input = np.zeros((100 * (len(t) - 1), 3))
+    nn_output = np.zeros_like(nn_input)
+
+    for j in range(100):
+        nn_input[j * (len(t) - 1):(j + 1) * (len(t) - 1), :] = x_t[j, :-1, :]
+        nn_output[j * (len(t) - 1):(j + 1) * (len(t) - 1), :] = x_t[j, 1:, :]
+
+    print(f"Lorenz data generated for rho = {rho}")
+    return nn_input, nn_output
+```
+
+#### Question 2: Comparison of FFNN, LSTM, ESN, and RNN at Predicting Lorenz System States
+
+Before diving into each different neural network model, this is a common function that is used to generate the lorenz data for each different $\rho$ value. 
+
+```python
+def generate_data(rho_values):
+    sigma = 10
+    beta = 8/3
+    dt = 0.02
+    T = 4
+    t = np.arange(0, T+dt, dt)
+
+    def lorenz_deriv(x_y_z, t0, sigma=sigma, beta=beta, rho_current=None):
+        x, y, z = x_y_z
+        return [sigma * (y - x), x * (rho_current - z) - y, x * y - beta * z]
+
+    nn_input = []
+    nn_output = []
+
+    for rho in rho_values:
+        x0 = -15 + 30 * np.random.random((50, 3))
+        x_t = np.asarray([integrate.odeint(lorenz_deriv, x0_j, t, args=(sigma, beta, rho)) for x0_j in x0])
+
+        for j in range(50):
+            nn_input.extend(x_t[j,:-1,:])
+            nn_output.extend(x_t[j,1:,:])
+
+    return np.array(nn_input), np.array(nn_output)
+```
+
+For each NN model, we obtain the training values by using this function, then convert them to torch tensors with the following code:
+
+```python
+train_rho_values = [10, 28, 40]
+x_train, y_train = generate_data(train_rho_values)
+x_train_torch = torch.tensor(x_train, dtype=torch.float32)
+y_train_torch = torch.tensor(y_train, dtype=torch.float32)
+```
+
+##### LSTM: 
+
+The LSTM model is defined using the code below:
+
+```python
+class LSTMModel(nn.Module):
+    def __init__(self, input_dim, hidden_dim, output_dim, num_layers):
+        super(LSTMModel, self).__init__()
+        self.hidden_dim = hidden_dim
+        self.num_layers = num_layers
+        self.lstm = nn.LSTM(input_dim, hidden_dim, num_layers, batch_first=True)
+        self.fc = nn.Linear(hidden_dim, output_dim)
+
+    def forward(self, x):
+        h0 = torch.zeros(self.num_layers, 1, self.hidden_dim).requires_grad_()
+        c0 = torch.zeros(self.num_layers, 1, self.hidden_dim).requires_grad_()
+        x = x.unsqueeze(0)  # Add an extra dimension for batching
+        out, (hn, cn) = self.lstm(x, (h0.detach(), c0.detach()))
+        out = self.fc(out[:, -1, :]) 
+        return out
+```
+
+The model is first initialized using the code below:
+
+```python
+model = LSTMModel(3, 50, 3, 1)
+```
+
+Our criterion is defined as MSE, and we use the Adam optimizer.
+
+```python
+criterion = nn.MSELoss()
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+```
+
+We train the model using a simple for loop to loop through 100 Epochs:
+
+```python
+for epoch in range(100):
+    if epoch % 10 == 0:
+        print("Epoch: ", epoch)
+    optimizer.zero_grad()
+    outputs = model(x_train_torch)
+    loss = criterion(outputs, y_train_torch)
+    if epoch % 10 == 0:
+        print("Current loss: ", loss.item())
+    loss.backward()
+    optimizer.step()
+```
+
+Another for loop is used to go through the two different test $\rho$ values and test the LSTM accuracy on the test values:
+
+```python
+test_rho_values = [17, 35]
+
+for rho in test_rho_values:
+    print(f"\nGenerating test data for rho = {rho}...")
+    x_test, y_test = generate_data([rho])  # Generate test data for this rho
+    x_test_torch = torch.tensor(x_test, dtype=torch.float32)
+    y_test_torch = torch.tensor(y_test, dtype=torch.float32)
+    print(f"Test data generation for rho = {rho} completed.\n")
+
+    print(f"Running prediction on test data for rho = {rho}...")
+    y_pred = model(x_test_torch)
+    print(f"Prediction for rho = {rho} completed.\n")
+
+    print(f"Calculating MSE loss on test data for rho = {rho}...")
+    mse_loss = criterion(y_pred, y_test_torch)
+    print(f"Test MSE Loss for rho = {rho}: ", mse_loss.item())
+```
+
+##### ESN: 
+
+For the most part, the ESN follows the exact same process as the LSTM above. Here is how the ESN module is defined: 
+
+```python
+class ESN(nn.Module):
+    def __init__(self, input_dim, reservoir_dim, output_dim):
+        super(ESN, self).__init__()
+        self.reservoir_dim = reservoir_dim
+        self.input_weights = nn.Parameter(torch.randn(input_dim, reservoir_dim) / np.sqrt(input_dim), requires_grad=False)
+        self.reservoir_weights = nn.Parameter(torch.randn(reservoir_dim, reservoir_dim), requires_grad=False)
+        self.output_weights = nn.Parameter(torch.zeros(reservoir_dim, output_dim))
+
+    def forward(self, x):
+        reservoir_state = torch.tanh(x @ self.input_weights + self.reservoir_state @ self.reservoir_weights)
+        self.reservoir_state = reservoir_state
+        return reservoir_state @ self.output_weights
+
+    def reset_state(self):
+        self.reservoir_state = torch.zeros(1, self.reservoir_dim)
+```
+
+It is initialized slightly differently when compared to the LSTM:
+
+```python
+print("Initializing the model...")
+model = ESN(3, 50, 3)
+model.reset_state()
+print("Model initialized.\n")
+```
+
+But the ESN still uses MSE for the loss, and it uses Adam as the optimizing method. Two for loops are also still used to train and test the model:
+
+```python
+for epoch in range(100):
+    if epoch % 10 == 0:
+        print("Epoch: ", epoch)
+    optimizer.zero_grad()
+    model.reset_state()
+    outputs = model(x_train_torch)
+    loss = criterion(outputs, y_train_torch)
+    if epoch % 10 == 0:
+        print("Current loss: ", loss.item())
+    loss.backward()
+    optimizer.step()
+    
+for rho in test_rho_values:
+    print(f"\nGenerating test data for rho = {rho}...")
+    x_test, y_test = generate_data([rho])  # Generate test data for this rho
+    x_test_torch = torch.tensor(x_test, dtype=torch.float32)
+    y_test_torch = torch.tensor(y_test, dtype=torch.float32)
+    print(f"Test data generation for rho = {rho} completed.\n")
+
+    print(f"Resetting model state and running prediction on test data for rho = {rho}...")
+    model.reset_state()
+    y_pred = model(x_test_torch)
+    print(f"Prediction for rho = {rho} completed.\n")
+
+    print(f"Calculating MSE loss on test data for rho = {rho}...")
+    mse_loss = criterion(y_pred, y_test_torch)
+    print(f"Test MSE Loss for rho = {rho}: ", mse_loss.item())
+```
+
+##### RNN:
+
+Like the ESN and the LSTM, the RNN follows a very similar overall pattern. The RNN is defined using a module as defined below:
+
+```python
+class SimpleRNN(nn.Module):
+    def __init__(self, input_dim, hidden_dim, output_dim):
+        super(SimpleRNN, self).__init__()
+        self.hidden_dim = hidden_dim
+        self.rnn = nn.RNN(input_dim, hidden_dim, batch_first=True)
+        self.fc = nn.Linear(hidden_dim, output_dim)
+
+    def forward(self, x):
+        h0 = torch.zeros(1, x.size(0), self.hidden_dim).to(x.device)
+        out, _ = self.rnn(x, h0)
+        out = self.fc(out[:, -1, :])
+        return out
+```
+
+The RNN model is initialized using the code below:
+
+```python
+model = SimpleRNN(3, 50, 3)
+```
+
+The same criterion is used for the RNN as the ESN, LSTM, and FFNN. The optimizer remains the Adam optimizing method, and a two for loops are used to train and test the model. 
 
 ### Sec. IV. Computational Results
 
+The specific loss values for each neural network is hard to quantify, as it changes slightly every time it is run. So any hard values in this write up are not going to be exactly like what the values when the code is ran again. For this reason, we will not be comparing with direct values, but only looking at the general result and whether the loss for one NN was consistently higher or lower than the other.
+
+#### FFNN Results:
+
+Here are the training loss values for the FFNN:
+
+```
+Epoch 10, loss = 209.141693
+Epoch 20, loss = 115.481621
+Epoch 30, loss = 48.743965
+Epoch 40, loss = 16.141109
+Epoch 50, loss = 6.935210
+Epoch 60, loss = 3.275884
+Epoch 70, loss = 2.436378
+Epoch 80, loss = 2.008651
+Epoch 90, loss = 1.496558
+Epoch 100, loss = 1.156174
+```
+
+```
+Test MSE loss for rho = 17: 78.122292
+```
+
+```
+Test MSE loss for rho = 35: 263.452789
+```
+
+#### LSTM Results:
+
+The MSE loss for the LSTM training is printed below: 
+
+```
+Epoch:  0
+Current loss:  307.0986328125
+Epoch:  10
+Current loss:  238.1931610107422
+Epoch:  20
+Current loss:  194.8776397705078
+Epoch:  30
+Current loss:  163.07229614257812
+Epoch:  40
+Current loss:  142.15342712402344
+Epoch:  50
+Current loss:  129.97702026367188
+Epoch:  60
+Current loss:  124.38225555419922
+Epoch:  70
+Current loss:  122.33444213867188
+Epoch:  80
+Current loss:  121.86066436767578
+Epoch:  90
+Current loss:  121.84431457519531
+```
+
+```
+Test MSE Loss for rho = 17:  66.92090606689453
+```
+
+```
+Test MSE Loss for rho = 35:  135.4553985595703
+```
+
+#### ESN Results:
+
+The MSE loss for the ESN training is printed below: 
+
+```
+Epoch:  0
+Current loss:  304.5351867675781
+Epoch:  10
+Current loss:  237.17877197265625
+Epoch:  20
+Current loss:  183.053466796875
+Epoch:  30
+Current loss:  142.16448974609375
+Epoch:  40
+Current loss:  113.07328796386719
+Epoch:  50
+Current loss:  93.4913101196289
+Epoch:  60
+Current loss:  80.96036529541016
+Epoch:  70
+Current loss:  73.31140899658203
+Epoch:  80
+Current loss:  68.84037017822266
+Epoch:  90
+Current loss:  66.31124877929688
+```
+
+```
+Test MSE Loss for rho = 17:  28.195171356201172
+```
+
+```
+Test MSE Loss for rho = 35:  67.7677001953125
+```
+
+#### RNN Results:
+
+The MSE loss for the RNN training is printed below: 
+
+```
+Epoch:  0
+Current loss:  317.39154052734375
+Epoch:  10
+Current loss:  231.94017028808594
+Epoch:  20
+Current loss:  186.25241088867188
+Epoch:  30
+Current loss:  153.58364868164062
+Epoch:  40
+Current loss:  134.9705352783203
+Epoch:  50
+Current loss:  126.64192199707031
+Epoch:  60
+Current loss:  123.91343688964844
+Epoch:  70
+Current loss:  123.38780212402344
+Epoch:  80
+Current loss:  123.3909912109375
+Epoch:  90
+Current loss:  123.40885925292969
+```
+
+```
+Test MSE Loss for rho = 17:  65.30891418457031
+```
+
+```
+Test MSE Loss for rho = 35:  130.9735107421875
+```
+
+#### Interpretation:
+
+Overall, from the test MSE loss, we can see that there is a definite ranking that can be made for how each NN does when it comes to forecasting the system state dynamics. 
+
+The ESN and LSTM are comparable, but the ESN has a clear lead when it comes to the accuracy. The LSTM is better than the RNN, and the FFNN is by far the worst.
+
 ### Sec. V. Summary and Conclusion
+
+This homework assignment was valuable in order to more understand the strengths and weaknesses of the different neural networks we have discussed. Each of these neural networks uses a different method to learn, and as a result, have strengths and weaknesses that are different from each other. 
+
+The Lorenz system is naturally very hard to predict as a result of its chaotic behavior, so for a NN to have a good accuracy, it needs to be good at capturing long-term dependencies, having memory and feedback connections, being able to handle nonlinear dynamics, and being robust to noise and initial conditions. Both ESNs and LSTMs, both a kind of RNN, have these features. It is clear from the output that the ESN and LSTM both perform the best. 
+
+The ESN performs the best out of the 4 neural network architectures that we tested. ESNs are specifically designed to handle time-varying and chaotic system and their reservoir structure allows it to effectively capture the dynamics of the Lorenz system.
+
+The LSTMs performed well due to being able to capture long-term dependencies in sequential data.
+
+The RNNs are also capable of handling sequential data, but not as good as LSTMs for long-term dependencies. 
+
+FFNNs are not explicitly designed for sequential data, which explains the high MSE loss for the test data. It struggles to accurately capture the cahotic dynamics and long term dependencies of the Lorenz system.
+
+To recap, the overall ranking of the NNs for this task are below:
+
+1. ESN
+2. LSTM
+3. RNN
+4. FFNN
 
 
