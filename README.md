@@ -6,6 +6,7 @@
 * [Homework 3 Writeup](https://github.com/gering92/EE399-Work/blob/main/README.md#homework-3-writeup)
 * [Homework 4 Writeup](https://github.com/gering92/EE399-Work/blob/main/README.md#homework-4-writeup)
 * [Homework 5 Writeup](https://github.com/gering92/EE399-Work/blob/main/README.md#homework-5-writeup)
+* [Homework 6 Writeup](https://github.com/gering92/EE399-Work/blob/main/README.md#homework-6-writeup)
 ---
 
 # Homework 1 Writeup
@@ -2264,3 +2265,70 @@ To recap, the overall ranking of the NNs for this task are below:
 4. FFNN
 
 
+---
+# Homework 6 Writeup
+## By: Gerin George
+
+
+
+* [Abstract](https://github.com/gering92/EE399-Work/blob/main/README.md#abstract-5)
+* [Sec. I. Introduction and Overview](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-i-introduction-and-overview-5)
+* [Sec. II. Theoretical Background](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-ii-theoretical-background-5)
+* [Sec. III. Algorithm Implementation and Development](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-iii-algorithm-implementation-and-development-5)
+* [Sec. IV. Computational Results](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-iv-computational-results-5)
+* [Sec. V. Summary and Conclusion](https://github.com/gering92/EE399-Work/blob/main/README.md#sec-v-summary-and-conclusion-4)
+
+
+### Abstract
+
+This assignment presents an instructional guide on the application of SHallow REcurrent Decoder (SHRED) models to the analysis of a high-dimensional spatio-temporal field. Utilizing the weekly mean sea-surface temperature dataset by NOAA Optimum Interpolation SST V2, we explore how SHRED models can effectively reconstruct spatio-temporal fields using sensor measurements.
+
+The SHRED model, a fusion of Long Short-Term Memory (LSTM) and Shallow Decoder Network (SDN), processes sensor measurement trajectories to yield valuable field data. The experiment proceeds by selecting three random sensor locations and assigning a trajectory length corresponding to one year of measurements.
+
+Following data division into training, validation, and testing sets, the data is preprocessed using MinMaxScaler, generating corresponding input/output pairs. The SHRED model is then trained using the datasets, and reconstruction from the test set is subsequently evaluated for accuracy, determined by the mean square error relative to the ground truth.
+
+The assignment encourages further exploration of the SHRED model's performance in relation to time lag variables, noise, and the number of sensors. The objective is to foster a deeper understanding of SHRED's effectiveness and limitations, contributing to its potential applications in spatio-temporal analysis.
+
+### Sec. I. Introduction and Overview
+
+The capacity to analyze high-dimensional spatio-temporal fields accurately is an invaluable tool in numerous scientific and technological domains. It has significant applications in meteorology, oceanography, geophysics, and many more fields, where it is crucial to track and predict the temporal changes of various physical quantities over large spatial areas. This assignment focuses on the use of SHallow REcurrent Decoder (SHRED) models, a novel combination of recurrent neural networks and shallow decoder networks, in the analysis of these fields.
+
+The assignment begins with a brief introduction to SHRED models, explaining their underpinnings and purpose. SHRED models merge the capabilities of Long Short-Term Memory (LSTM) networks and Shallow Decoder Networks (SDN) to reconstruct high-dimensional spatio-temporal fields from sensor measurements. The principle is that the LSTM layer captures temporal correlations in the data while the SDN layer handles spatial correlations.
+
+Three sensor locations are randomly selected from the dataset, with a trajectory length of 52 weeks, equivalent to a full year of measurements. The data is then partitioned into three subsets: training, validation, and testing, following which it is preprocessed with sklearn's MinMaxScaler for better model performance.
+
+The SHRED model is trained on the training dataset and evaluated on the validation dataset. Finally, the model is used to generate reconstructions from the test set. The accuracy of these reconstructions is assessed by comparing them to the ground truth using the mean square error (MSE).
+
+In addition to the primary focus of SHRED model application, the assignment also delves into examining the model's performance concerning the time lag variable, noise introduction, and the number of sensors. These explorations provide crucial insights into the performance and robustness of SHRED models in various scenarios.
+
+This assignment serves as an instructive and exploratory endeavor into SHRED models and their potential in reconstructing high-dimensional spatio-temporal fields. It fosters an understanding of the models' applicability and adaptability, setting the groundwork for future applications and enhancements.
+
+
+### Sec. II. Theoretical Background
+
+The central focus of this assignment is the SHallow REcurrent Decoder (SHRED) model, a novel network architecture that combines the power of recurrent neural networks, specifically Long Short-Term Memory (LSTM), and a Shallow Decoder Network (SDN). The SHRED model is designed to reconstruct high-dimensional spatio-temporal fields from sensor measurements.
+
+SHRED Model
+The SHRED model architecture consists of two main components: an LSTM and an SDN. The LSTM network, with its inherent ability to learn and understand long-term dependencies in sequences, is used for capturing the temporal correlations within the dataset. This makes it highly suitable for processing a trajectory of sensor measurements taken over a period. On the other hand, the SDN is a feedforward neural network that handles the spatial correlations in the data, enabling it to handle high-dimensional fields effectively.
+
+Formally, the SHRED architecture can be written as:
+$\mathcal {H} \left( \{ y_i \} _{i=t-k}^t \right) = \mathcal {F} \left( \mathcal {G} \left( \{ y_i \} _{i=t-k}^t \right) ; W_{RN} \right) ; W_{SD}$
+
+where:
+
+$\mathcal {H}$ is the SHRED model
+${ y_i } _{i=t-k}^t$ is a trajectory of sensor measurements of a high-dimensional spatio-temporal field ${ x_i } _{i=t-k}^t$
+$\mathcal {F}$ is a feedforward network (the SDN) parameterized by weights $W_{SD}$
+$\mathcal {G}$ is an LSTM network parameterized by weights $W_{RN}$
+
+Long Short-Term Memory (LSTM)
+LSTM, a type of recurrent neural network, is designed to learn and understand long-term dependencies in sequential data. It employs gate mechanisms, including an input gate, forget gate, and output gate, to control the flow of information through its memory cell. This mechanism enables the LSTM to decide what information to store, delete, or output, making it capable of handling complex time-series data.
+
+Shallow Decoder Network (SDN)
+SDNs are a type of feedforward neural network that serve to handle the spatial dimension in the data. Unlike deep neural networks that consist of several layers of neurons, an SDN is a "shallow" network, meaning it has fewer hidden layers. This structure makes the SDN adept at approximating any continuous function, making it suitable for handling high-dimensional spatial data.
+
+### Sec. III. Algorithm Implementation and Development
+
+### Sec. IV. Computational Results
+
+### Sec. V. Summary and Conclusion
