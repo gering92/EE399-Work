@@ -2329,6 +2329,179 @@ SDNs are a type of feedforward neural network that serve to handle the spatial d
 
 ### Sec. III. Algorithm Implementation and Development
 
+For the original data and implementation, the algorithm works by first randomly selecting 3 sensor locations, and setting the trajectory length (or lags) to 52. This corresponds to one year of measurements. 
+
+```python
+num_sensors = 3 
+lags = 52
+```
+
+The size of the data is extracted and kept in the variables n and m using the following method:
+
+```python
+load_X = load_data('SST')
+n = load_X.shape[0]
+m = load_X.shape[1]
+```
+
+The sensor locations are randomized using the following code:
+
+```python
+sensor_locations = np.random.choice(m, size=num_sensors, replace=False)
+```
+
+We split the data into training, validattion, and test data sets using the following method:
+
+```python
+train_indices = np.random.choice(n - lags, size=1000, replace=False)
+mask = np.ones(n - lags)
+mask[train_indices] = 0
+valid_test_indices = np.arange(0, n - lags)[np.where(mask!=0)[0]]
+valid_indices = valid_test_indices[::2]
+test_indices = valid_test_indices[1::2]
+```
+
+The MinMaxScaler from sklearn is used to preprocess the data for training. 
+
+```python
+sc = MinMaxScaler()
+sc = sc.fit(load_X[train_indices])
+transformed_X = sc.transform(load_X)
+```
+
+The input sequences for the SHRED model are generated using the following code:
+
+```python
+all_data_in = np.zeros((n - lags, lags, num_sensors))
+for i in range(len(all_data_in)):
+    all_data_in[i] = transformed_X[i:i+lags, sensor_locations]
+```
+
+The code below is used to split the data into training, validation, and test subsets, converting those subsets into pytorch tensors, and sending those tensors to a specified device. The device is the CPU if CUDA cores are not available, and CUDA cores if they are available.
+
+```python
+train_data_in = torch.tensor(all_data_in[train_indices], dtype=torch.float32).to(device)
+valid_data_in = torch.tensor(all_data_in[valid_indices], dtype=torch.float32).to(device)
+test_data_in = torch.tensor(all_data_in[test_indices], dtype=torch.float32).to(device)
+```
+
+After this, we make the final sensor measurements and output be at the same time by subtracting 1. 
+
+```python
+train_data_out = torch.tensor(transformed_X[train_indices + lags - 1], dtype=torch.float32).to(device)
+valid_data_out = torch.tensor(transformed_X[valid_indices + lags - 1], dtype=torch.float32).to(device)
+test_data_out = torch.tensor(transformed_X[test_indices + lags - 1], dtype=torch.float32).to(device)
+```
+
+We then create the full training, validation, and test datasets using the TimeSeriesDataset function:
+
+```python
+train_dataset = TimeSeriesDataset(train_data_in, train_data_out)
+valid_dataset = TimeSeriesDataset(valid_data_in, valid_data_out)
+test_dataset = TimeSeriesDataset(test_data_in, test_data_out)
+```
+
+We then create a SHRED model and train it for 60 epochs using the following code: 
+
+```python
+shred = models.SHRED(num_sensors, m, hidden_size=64, hidden_layers=2, l1=350, l2=400, dropout=0.1).to(device)
+validation_errors = models.fit(shred, train_dataset, valid_dataset, batch_size=64, num_epochs=60, lr=1e-3, verbose=True, patience=5)
+```
+
+Finally, we find the accuracy of the model by making predictions and comparing it to the ground truth values:
+
+```python
+test_recons = sc.inverse_transform(shred(test_dataset.X).detach().cpu().numpy())
+test_ground_truth = sc.inverse_transform(test_dataset.Y.detach().cpu().numpy())
+print(np.linalg.norm(test_recons - test_ground_truth) / np.linalg.norm(test_ground_truth))
+```
+
+To plot the results of the model, we use a for loop to make a graph of the true and predicted values for all 3 sensors:
+
+```python
+for i in range(num_sensors):
+    plt.figure(figsize=(14, 6))
+    plt.plot(test_ground_truth[:, i], label='True values', color='blue')
+    plt.plot(test_recons[:, i], label='Predicted values', color='red')
+    plt.legend()
+    plt.title(f'True and Predicted Values for Sensor {i}')
+    plt.xlabel('Time')
+    plt.ylabel('Temperature')
+    plt.show()
+```
+
+To evaluate the performance of the model as a function of time lag, we similarly create a function called train_and_evaluate(lags) that takes in the lags as a parameter. We then loop through using the following code to test the performance of the SHRED model on a series of different lag values:
+
+```python
+lags = range(10, 100, 10)
+
+performance = []
+
+for lag in lags:
+    perf = train_and_evaluate(lag)
+    performance.append(perf)
+```
+
+The full train_and_evaluate function is defined below:
+
+```python
+def train_and_evaluate(lags):
+    num_sensors = 3 
+    load_X = load_data('SST')
+    n = load_X.shape[0]
+    m = load_X.shape[1]
+    sensor_locations = np.random.choice(m, size=num_sensors, replace=False)
+    
+    train_indices = np.random.choice(n - lags, size=1000, replace=False)
+    mask = np.ones(n - lags)
+    mask[train_indices] = 0
+    valid_test_indices = np.arange(0, n - lags)[np.where(mask!=0)[0]]
+    valid_indices = valid_test_indices[::2]
+    test_indices = valid_test_indices[1::2]
+    sc = MinMaxScaler()
+    sc = sc.fit(load_X[train_indices])
+    transformed_X = sc.transform(load_X)
+
+    ### Generate input sequences to a SHRED model
+    all_data_in = np.zeros((n - lags, lags, num_sensors))
+    for i in range(len(all_data_in)):
+        all_data_in[i] = transformed_X[i:i+lags, sensor_locations]
+
+    ### Generate training validation and test datasets both for reconstruction of states and forecasting sensors
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+    train_data_in = torch.tensor(all_data_in[train_indices], dtype=torch.float32).to(device)
+    valid_data_in = torch.tensor(all_data_in[valid_indices], dtype=torch.float32).to(device)
+    test_data_in = torch.tensor(all_data_in[test_indices], dtype=torch.float32).to(device)
+
+    ### -1 to have output be at the same time as final sensor measurements
+    train_data_out = torch.tensor(transformed_X[train_indices + lags - 1], dtype=torch.float32).to(device)
+    valid_data_out = torch.tensor(transformed_X[valid_indices + lags - 1], dtype=torch.float32).to(device)
+    test_data_out = torch.tensor(transformed_X[test_indices + lags - 1], dtype=torch.float32).to(device)
+
+    train_dataset = TimeSeriesDataset(train_data_in, train_data_out)
+    valid_dataset = TimeSeriesDataset(valid_data_in, valid_data_out)
+    test_dataset = TimeSeriesDataset(test_data_in, test_data_out)
+    
+    shred = models.SHRED(num_sensors, m, hidden_size=64, hidden_layers=2, l1=350, l2=400, dropout=0.1).to(device)
+    validation_errors = models.fit(shred, train_dataset, valid_dataset, batch_size=64, num_epochs=60, lr=1e-3, verbose=False, patience=5)
+    
+    test_recons = sc.inverse_transform(shred(test_dataset.X).detach().cpu().numpy())
+    test_ground_truth = sc.inverse_transform(test_dataset.Y.detach().cpu().numpy())
+    return np.linalg.norm(test_recons - test_ground_truth) / np.linalg.norm(test_ground_truth)
+```
+
+Similarly, to evaluate the performance of the model as a function of the noise level, we create another function that takes in noise levels as a parameter, and loop through a series of different noise values to test performance. 
+
+```python
+noise_levels = np.linspace(0, 1, 10)
+performance = []
+
+for noise_level in noise_levels:
+    perf = train_and_evaluate_with_noise(noise_level)
+    performance.append(perf)
+```
+
 ### Sec. IV. Computational Results
 
 ### Sec. V. Summary and Conclusion
