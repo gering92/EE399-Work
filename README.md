@@ -2312,7 +2312,9 @@ SHRED Model
 The SHRED model architecture consists of two main components: an LSTM and an SDN. The LSTM network, with its inherent ability to learn and understand long-term dependencies in sequences, is used for capturing the temporal correlations within the dataset. This makes it highly suitable for processing a trajectory of sensor measurements taken over a period. On the other hand, the SDN is a feedforward neural network that handles the spatial correlations in the data, enabling it to handle high-dimensional fields effectively.
 
 Formally, the SHRED architecture can be written as:
+\begin{equation}
 $\mathcal {H} \left( \{ y_i \} _{i=t-k}^t \right) = \mathcal {F} \left( \mathcal {G} \left( \{ y_i \} _{i=t-k}^t \right) ; W_{RN} \right) ; W_{SD}$
+\end{equation}
 
 where:
 
