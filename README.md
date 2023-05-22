@@ -2311,19 +2311,17 @@ The central focus of this assignment is the SHallow REcurrent Decoder (SHRED) mo
 SHRED Model
 The SHRED model architecture consists of two main components: an LSTM and an SDN. The LSTM network, with its inherent ability to learn and understand long-term dependencies in sequences, is used for capturing the temporal correlations within the dataset. This makes it highly suitable for processing a trajectory of sensor measurements taken over a period. On the other hand, the SDN is a feedforward neural network that handles the spatial correlations in the data, enabling it to handle high-dimensional fields effectively.
 
-Formally, the SHRED architecture can be written as:
+The SHRED architecture is represented by the following formula:
 
-\begin{equation}
+$$
 \mathcal {H} \left( \{ y_i \} _{i=t-k}^t \right) = \mathcal {F} \left( \mathcal {G} \left( \{ y_i \} _{i=t-k}^t \right) ; W_{RN} \right) ; W_{SD}
-\end{equation}
+$$
 
 where:
-\begin{itemize}
-\item $\mathcal {H}$ represents the SHRED model.
-\item $\{ y_i \} _{i=t-k}^t$ denotes a trajectory of sensor measurements of a high-dimensional spatio-temporal field $\{ x_i \} _{i=t-k}^t$.
-\item $\mathcal {F}$ is a feed-forward network (the SDN) parameterized by weights $W_{SD}$.
-\item $\mathcal {G}$ is an LSTM network parameterized by weights $W_{RN}$.
-\end{itemize}
+- $\mathcal {H}$ represents the SHRED model.
+- $\{ y_i \} _{i=t-k}^t$ denotes a trajectory of sensor measurements of a high-dimensional spatio-temporal field $\{ x_i \} _{i=t-k}^t$.
+- $\mathcal {F}$ is a feed-forward network (the SDN) parameterized by weights $W_{SD}$.
+- $\mathcal {G}$ is an LSTM network parameterized by weights $W_{RN}$.
 
 Long Short-Term Memory (LSTM)
 LSTM, a type of recurrent neural network, is designed to learn and understand long-term dependencies in sequential data. It employs gate mechanisms, including an input gate, forget gate, and output gate, to control the flow of information through its memory cell. This mechanism enables the LSTM to decide what information to store, delete, or output, making it capable of handling complex time-series data.
