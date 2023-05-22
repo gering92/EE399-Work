@@ -2313,7 +2313,7 @@ The SHRED model architecture consists of two main components: an LSTM and an SDN
 
 The SHRED architecture is represented by the following formula:
 
-![SHRED equation](https://latex.codecogs.com/png.latex?\dpi{120}&space;\fn_phv&space;\mathcal&space;{H}&space;\left(&space;\{&space;y_i&space;\}&space;_{i=t-k}^{t}&space;\right)&space;=&space;\mathcal&space;{F}&space;\left(&space;\mathcal&space;{G}&space;\left(&space;\{&space;y_i&space;\}&space;_{i=t-k}^{t}&space;\right)&space;;&space;W_{RN}&space;\right)&space;;&space;W
+![SHRED equation](https://latex.codecogs.com/png.latex?%5Cdpi%7B120%7D%20%5Cfn_phv%20%5Cmathcal%20%7BH%7D%20%5Cleft%28%20%5C%7B%20y_i%20%5C%7D%20_%7Bi%3Dt-k%7D%5Et%20%5Cright%29%20%3D%20%5Cmathcal%20%7BF%7D%20%5Cleft%28%20%5Cmathcal%20%7BG%7D%20%5Cleft%28%20%5C%7B%20y_i%20%5C%7D%20_%7Bi%3Dt-k%7D%5Et%20%5Cright%29%20%3B%20W_%7BRN%7D%20%5Cright%29%20%3B%20W_%7BSD%7D)
 
 
 where:
