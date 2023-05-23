@@ -2627,6 +2627,58 @@ def train_and_evaluate_sensors(num_sensors):
 
 ### Sec. IV. Computational Results
 
+#### Question 2: Training the Model and Plotting the Results
+
+The results of the data are illustrated in the three graphs below. They show the true and predicted values of the three sensors are below.
+
+The true and predicted values of sensor 0 is shown below:
+
+<img width="857" alt="image" src="https://github.com/gering92/EE399-Work/assets/80599571/636fec47-e597-4f80-b30f-0d3ff42dca0b">
+
+The true and predicted values of sensor 1 is shown below:
+
+<img width="857" alt="image" src="https://github.com/gering92/EE399-Work/assets/80599571/b505acb4-298c-4f1c-abf3-3194faad607f">
+
+The true and predicted values of sensor 2 is shown below:
+
+<img width="857" alt="image" src="https://github.com/gering92/EE399-Work/assets/80599571/e2970a42-6e6e-4d65-a302-ba37820f1187">
+
+As we see, the sensors are all very accurate to the true temperatures. There is minor variance, but they are all for the most part very close to the true value. When the true value suddenly changed, the sensor value did not change from the trend of the predicted values. 
+
+#### Question 3: Analysis of Performance as a Function of Time Lag
+
+When we evaluate the performance of the model as the time lag increases, we see the following result:
+
+<img width="857" alt="image" src="https://github.com/gering92/EE399-Work/assets/80599571/16b7d71b-7a51-458a-b4f3-a306a22c7fa8">
+
+The performance generally improves as the time lag increases, as the MSE of the model decreases. This behavior makes sense as there is more information that can be considered with greater lag, as that means we are considering data from a greater period of time. It appears that the best performance is with a lag of 80. However, increasing the lag further may not necessarily lead to better performance, as it could lead to overfitting and diminishing returns as the as each additional lag may provide less and less predictive power. 
+
+#### Question 4: Analysis of Performance as a Function of Noise
+
+When we evaluate the performance of the model as a function of the noise, we see the following results:
+
+<img width="857" alt="image" src="https://github.com/gering92/EE399-Work/assets/80599571/5202802b-254e-4ebf-8c6d-88785965c4a5">
+
+The performance of the model becomes worse as the noise level increased, which is expected. What is interesting to see is the scale of the decrease in performance was quite small, and the performance did not decrease drastically. The MSE loss of the model close to doubled as the noise level increased from 0 to 1, but the MSE was at the level of around 0.037 with 0 noise, and 0.067 with a noise level of 1.
+
+
+#### Question 5: Analysis of Performance as a Function of the Number of Sensors
+
+When we evaluate the performance of the model as a function of the number of sensors, we see the following results:
+
+<img width="857" alt="image" src="https://github.com/gering92/EE399-Work/assets/80599571/d987ced6-5fa9-49c6-989f-d4d4ef9ad30f">
+
+The model performance generally increases as the number of sensors increases, although there is a point of diminishing returns. 6 sensors appears to be the count of sensors that results in the best performance. 
 
 
 ### Sec. V. Summary and Conclusion
+
+From the SHRED model, we can see that the model is very good at predicting temperature values. It has a very low error in general, and the MSE values are all exceptionally low, even when the model has only been trained for a single epoch. 
+
+We can see that when we increase the number of time lags, the model performance improves. This makes sense, as when we increase the lags, it increases the period of time that the model is considering to make its predictions. However, increasing it too much can lead to overfitting and diminishing returns, as the predictive power of the lags will decrease as it is providing redundant information. 
+
+When we evaluate the model as a function of the noise level, we see that the model performance decreases. This also makes sense, as increased noise will lead to more difficulty for the model to figure out the true values. 
+
+When we increase the number of sensors and look at the performance of the model, we see that the performance increases slightly until the number of sensors increases past 6, at which point the performance gets slightly worse. 
+
+The conclusion that can be drawn from this is the overall complexity and power of the SHRED model, as it is very good at predicting the temperature values. 
