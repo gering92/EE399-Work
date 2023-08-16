@@ -1,3 +1,5 @@
+# This is a portfolio of an exploration of various different machine learning and reinforcement learning topics. In this repo, I will be exploring curve fitting, modeling, reinforcement learning, neural networks, and more. Please visit each homework writeup individually to see a more in depth explanation of the various aspects of ML that will be covered in this repo.
+
 # *Assignment Writeup Links*
 
 =================
